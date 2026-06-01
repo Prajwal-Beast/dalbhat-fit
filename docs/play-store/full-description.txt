@@ -1,0 +1,59 @@
+🍛 DhalBhat Fit — Fitness Built for Nepali Life
+
+Finally, a health and fitness app that understands YOUR food.
+
+Most calorie trackers are built for Western diets — they don't know dal bhat, momo, sel roti, or chiya. DhalBhat Fit is built from the ground up for Nepali food culture, with real local foods, real Nepali portions, and workouts that fit your lifestyle.
+
+──────────────────────────
+🥗 NEPALI FOOD DATABASE
+──────────────────────────
+• 50+ verified Nepali foods with accurate macros
+• Dal Bhat Thali (small, medium, large portions)
+• Momo, chiya, sel roti, sekuwa, Newari specialties & more
+• Search in English or नेपाली
+• Log meals in seconds — no guessing
+
+──────────────────────────
+🔥 CALORIE & MACRO TRACKING
+──────────────────────────
+• Live calorie ring on your home screen
+• Track protein, carbs, and fat every day
+• Daily calorie target calculated using Mifflin-St Jeor formula
+• Asian BMI cutoffs (more accurate for Nepali body types)
+• Breakfast, lunch, dinner & snacks tracked separately
+
+──────────────────────────
+💪 WORKOUT PLANS
+──────────────────────────
+• Home workouts — no gym needed
+• Gym strength programs
+• Beginner to advanced levels
+• Rest timer built in
+• Workouts matched to your goal (lose weight / gain muscle / maintain)
+
+──────────────────────────
+📊 PROGRESS TRACKING
+──────────────────────────
+• Weight trend chart
+• Calorie history
+• Goal progress tracker
+• Log your weight daily and watch the trend
+
+──────────────────────────
+📱 BUILT FOR NEPAL
+──────────────────────────
+• Works offline — logs food even without internet
+• Syncs automatically when back online
+• Fast, lightweight, and clean design
+• Sign in with Google — your data is always safe
+
+──────────────────────────
+🔒 YOUR DATA IS SAFE
+──────────────────────────
+• Secure cloud storage with Supabase
+• Your data belongs to you
+• Delete your account anytime
+
+Whether you want to lose weight, build muscle, or just eat mindfully — DhalBhat Fit is your daily companion, built for the way Nepalis actually eat and live.
+
+Download free. Start today. 🙏
