@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DhalBhat Fit — Brand Foundation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#2D6A4F;
+    --green-d:#40916C;
+    --green-on-dark:#74C69D;
+    --saffron:#F4A261;
+    --saffron-d:#F6B179;
+    --offwhite:#F8F9FA;
+    --ink:#1A1A2E;
+    --success:#52B788;
+    --error:#E76F51;
+    --paper-dark:#121A17;
+    --line:#E7E9EC;
+    --muted:#6B7280;
+    --r-card:20px;
+    --r-btn:12px;
+    --shadow-soft:0 1px 2px rgba(26,26,46,.04), 0 8px 24px rgba(26,26,46,.06);
+    --shadow-lift:0 2px 4px rgba(26,26,46,.05), 0 16px 40px rgba(26,26,46,.10);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Poppins',system-ui,sans-serif;
+    background:var(--offwhite);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px;}
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    background:
+      radial-gradient(120% 140% at 80% -10%, rgba(244,162,97,.18), transparent 55%),
+      var(--green);
+    color:#fff;
+    padding:64px 0 72px;
+    position:relative;
+    overflow:hidden;
+  }
+  .masthead .wrap{position:relative;z-index:2;}
+  .kicker{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--saffron);
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.14);
+    padding:7px 14px;border-radius:999px;
+  }
+  .masthead h1{
+    font-size:54px;font-weight:600;letter-spacing:-.02em;margin:22px 0 6px;line-height:1.04;
+  }
+  .masthead h1 .dev{font-family:'Noto Sans Devanagari',sans-serif;font-weight:500;font-size:.62em;display:block;color:var(--green-on-dark);letter-spacing:0;margin-top:6px;}
+  .masthead p{font-size:18px;max-width:560px;color:rgba(255,255,255,.82);font-weight:300;margin:0;}
+  .mast-logo{position:absolute;right:-40px;bottom:-60px;width:380px;opacity:.16;z-index:1;}
+
+  /* ---------- Section scaffolding ---------- */
+  section{padding:72px 0;border-bottom:1px solid var(--line);}
+  .sec-head{margin-bottom:40px;max-width:680px;}
+  .sec-num{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--saffron);}
+  .sec-num b{color:var(--green);}
+  .sec-head h2{font-size:34px;font-weight:600;letter-spacing:-.02em;margin:10px 0 8px;}
+  .sec-head p{font-size:16px;color:var(--muted);margin:0;}
+
+  /* ---------- Logo concept blocks ---------- */
+  .concept{margin-bottom:64px;}
+  .concept:last-child{margin-bottom:0;}
+  .concept-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px;}
+  .concept-head .tag{font-size:12px;font-weight:600;color:var(--saffron);background:#FCEEDF;padding:4px 11px;border-radius:999px;letter-spacing:.02em;}
+  .concept-head h3{font-size:23px;font-weight:600;margin:0;letter-spacing:-.01em;}
+  .concept-desc{color:var(--muted);font-size:15px;max-width:640px;margin:0 0 26px;}
+
+  .logo-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:18px;}
+  .logo-grid .row2{grid-column:1 / -1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;}
+  .stage{
+    background:#fff;border:1px solid var(--line);border-radius:var(--r-card);
+    box-shadow:var(--shadow-soft);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:30px 22px;min-height:150px;gap:14px;position:relative;
+  }
+  .stage .lbl{position:absolute;top:12px;left:14px;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .stage.dark{background:var(--paper-dark);border-color:#22332c;}
+  .stage.dark .lbl{color:#7E938A;}
+
+  /* full lockup */
+  .lockup{display:flex;align-items:center;gap:16px;}
+  .lockup .mark{width:60px;height:60px;flex:0 0 auto;}
+  .wordmark{display:flex;flex-direction:column;line-height:1;}
+  .wordmark .wm{font-size:27px;font-weight:700;letter-spacing:-.035em;color:var(--ink);}
+  .wordmark .wm .b{color:var(--green);}
+  .wordmark .wm .s{color:var(--saffron);}
+  .wordmark .sub{font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:5px;}
+  .stage.dark .wordmark .wm{color:#fff;}
+  .stage.dark .wordmark .wm .b{color:var(--green-on-dark);}
+  .stage.dark .wordmark .sub{color:#7E938A;}
+
+  /* app icon */
+  .appicon{border-radius:23%;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(45,106,79,.28);}
+  .appicon svg{width:62%;height:62%;}
+
+  .small-row{display:flex;align-items:center;gap:18px;}
+  .small-row .mark{width:48px;height:48px;}
+  .small-row .mark.s32{width:32px;height:32px;}
+  .small-row .mark.s24{width:24px;height:24px;}
+  .micro-note{font-size:11px;color:var(--muted);}
+
+  /* ---------- Recommended ---------- */
+  .reco{
+    background:#fff;border:1px solid var(--line);border-radius:var(--r-card);
+    box-shadow:var(--shadow-lift);padding:40px;display:grid;grid-template-columns:280px 1fr;gap:40px;align-items:center;
+  }
+  .reco-mark{background:var(--green);border-radius:28px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(45,106,79,.3);}
+  .reco-mark svg{width:58%;height:58%;}
+  .reco h3{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--saffron);margin:0 0 6px;}
+  .reco h4{font-size:26px;font-weight:600;margin:0 0 14px;letter-spacing:-.01em;}
+  .reco p{color:#3A3A4A;font-size:15.5px;margin:0 0 14px;}
+  .reco ul{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px;}
+  .reco li{display:flex;gap:11px;font-size:14.5px;color:#3A3A4A;align-items:flex-start;}
+  .reco li::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--success);margin-top:7px;flex:0 0 auto;}
+
+  /* ---------- Colors ---------- */
+  .color-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .swatch{border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;box-shadow:var(--shadow-soft);background:#fff;}
+  .swatch .chip{height:120px;display:flex;align-items:flex-end;justify-content:space-between;padding:14px;}
+  .swatch .chip .role{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:rgba(255,255,255,.85);color:var(--ink);}
+  .swatch .chip .hex{font-size:12px;font-weight:600;font-family:'Poppins';color:#fff;background:rgba(0,0,0,.18);padding:4px 9px;border-radius:999px;}
+  .swatch .body{padding:16px 16px 18px;}
+  .swatch .name{font-size:16px;font-weight:600;margin:0 0 4px;}
+  .swatch .use{font-size:13px;color:var(--muted);margin:0 0 12px;line-height:1.45;}
+  .swatch .dark-row{display:flex;align-items:center;gap:9px;border-top:1px solid var(--line);padding-top:12px;}
+  .swatch .dark-dot{width:22px;height:22px;border-radius:7px;flex:0 0 auto;border:1px solid rgba(0,0,0,.08);}
+  .swatch .dark-row span{font-size:12px;color:var(--muted);}
+  .swatch .dark-row b{color:var(--ink);font-weight:600;font-size:12px;}
+
+  /* ---------- Type ---------- */
+  .type-card{background:#fff;border:1px solid var(--line);border-radius:var(--r-card);box-shadow:var(--shadow-soft);padding:34px 36px;margin-bottom:22px;}
+  .type-card .meta{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:22px;flex-wrap:wrap;gap:8px;}
+  .type-card .meta h3{font-size:20px;font-weight:600;margin:0;}
+  .type-card .meta .src{font-size:12.5px;color:var(--muted);}
+  .specimen-row{display:flex;align-items:baseline;gap:22px;padding:11px 0;border-bottom:1px dashed var(--line);}
+  .specimen-row:last-child{border-bottom:none;}
+  .specimen-row .w{font-size:11px;color:var(--muted);width:120px;flex:0 0 auto;letter-spacing:.04em;text-transform:uppercase;font-weight:500;}
+  .dev{font-family:'Noto Sans Devanagari',sans-serif;}
+  .pair-line{font-size:30px;font-weight:500;letter-spacing:-.01em;line-height:1.3;}
+  .pair-line .dev{color:var(--green);}
+
+  /* ---------- Store icons ---------- */
+  .store-grid{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-end;}
+  .store-item{display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .store-item .cap{font-size:13px;color:var(--muted);font-weight:500;text-align:center;}
+  .store-item .cap b{color:var(--ink);display:block;font-size:14px;}
+  .store-1024{width:200px;height:200px;}
+  .store-512{width:128px;height:128px;}
+  .store-grid .appicon{background:var(--green);}
+
+  footer{padding:40px 0 64px;color:var(--muted);font-size:13px;}
+  footer b{color:var(--ink);}
+
+  @media(max-width:860px){
+    .logo-grid{grid-template-columns:1fr 1fr;}
+    .logo-grid .lockup-stage{grid-column:1 / -1;}
+    .reco{grid-template-columns:1fr;text-align:left;}
+    .reco-mark{max-width:200px;}
+    .color-grid{grid-template-columns:1fr 1fr;}
+    .masthead h1{font-size:40px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== SVG SYMBOL LIBRARY ===================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Concept 1 — Pulse Peak (heartbeat spiking into a summit) -->
+    <symbol id="mark-bowl" viewBox="0 0 64 64">
+      <path d="M4 42 H16 L21 34 L26 42 L32 8 L38 42 L43 34 L48 42 H60" fill="none" stroke="var(--m1,#2D6A4F)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="32" cy="8" r="3.6" fill="var(--m2,#F4A261)"/>
+    </symbol>
+
+    <!-- Concept 2 — In Motion (athletic figure mid-stride) -->
+    <symbol id="mark-mtn" viewBox="0 0 64 64">
+      <circle cx="39" cy="12" r="6" fill="var(--m1,#2D6A4F)"/>
+      <path d="M37 19 L28 34" fill="none" stroke="var(--m1,#2D6A4F)" stroke-width="6.5" stroke-linecap="round"/>
+      <path d="M28 34 L39 40 L34 53" fill="none" stroke="var(--m1,#2D6A4F)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M28 34 L16 38 L11 51" fill="none" stroke="var(--m1,#2D6A4F)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M33 25 L47 29" fill="none" stroke="var(--m2,#F4A261)" stroke-width="6.5" stroke-linecap="round"/>
+      <path d="M33 25 L21 20" fill="none" stroke="var(--m2,#F4A261)" stroke-width="6.5" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- Concept 3 — Strength D (monogram cradling a dumbbell) -->
+    <symbol id="mark-d" viewBox="0 0 64 64">
+      <path fill-rule="evenodd" clip-rule="evenodd"
+        d="M14 10 L 33 10 C 47 10 55 20 55 32 C 55 44 47 54 33 54 L 14 54 Z
+           M24 19.5 L 33 19.5 C 42 19.5 45 25.5 45 32 C 45 38.5 42 44.5 33 44.5 L 24 44.5 Z"
+        fill="var(--m1,#2D6A4F)"/>
+      <g fill="var(--m2,#F4A261)">
+        <rect x="29" y="30" width="11" height="4" rx="2"/>
+        <rect x="26" y="26" width="4" height="12" rx="2"/>
+        <rect x="39" y="26" width="4" height="12" rx="2"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ===================== MASTHEAD ===================== -->
+<header class="masthead">
+  <svg class="mast-logo" style="--m1:#fff;--m2:#F4A261"><use href="#mark-bowl"/></svg>
+  <div class="wrap">
+    <span class="kicker">Brand Foundation · v1</span>
+    <h1>DhalBhat&nbsp;Fit
+      <span class="dev">दालभात फिट</span>
+    </h1>
+    <p>Built for dal bhat and daily fitness. Logos, color, and type — the foundation a Nepali user looks at and thinks, <em>"finally, someone made this for me."</em></p>
+  </div>
+</header>
+
+<!-- ===================== 1 · LOGOS ===================== -->
+<section id="logos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num"><b>01</b> · Logo concepts</div>
+      <h2>Three directions, one identity</h2>
+      <p>Each concept is shown full-color on light and dark, single-color, as an app icon, and at 48px to verify legibility.</p>
+    </div>
+
+    <!-- Concept 1 -->
+    <div class="concept">
+      <div class="concept-head">
+        <span class="tag">Concept 01</span>
+        <h3>Pulse Peak</h3>
+      </div>
+      <p class="concept-desc">A heartbeat pulse spiking into a summit. It reads as fitness and health instantly — the tall central spike doubles as Nepal's mountains, and the saffron marker is the goal at the top.</p>
+      <div class="logo-grid">
+        <div class="stage lockup-stage" style="--m1:#2D6A4F;--m2:#F4A261">
+          <span class="lbl">Full colour · light</span>
+          <div class="lockup">
+            <svg class="mark"><use href="#mark-bowl"/></svg>
+            <div class="wordmark"><div class="wm"><span class="b">DhalBhat</span> <span class="s">Fit</span></div><div class="sub">दालभात फिट</div></div>
+          </div>
+        </div>
+        <div class="stage dark" style="--m1:#74C69D;--m2:#F4A261">
+          <span class="lbl">On dark</span>
+          <svg class="mark" style="width:74px;height:74px"><use href="#mark-bowl"/></svg>
+        </div>
+        <div class="stage" style="--m1:#2D6A4F;--m2:#2D6A4F">
+          <span class="lbl">Single colour</span>
+          <svg class="mark" style="width:74px;height:74px"><use href="#mark-bowl"/></svg>
+        </div>
+        <div class="row2">
+          <div class="stage">
+            <span class="lbl">App icon · 1024</span>
+            <div class="appicon" style="width:104px;height:104px;background:var(--green);--m1:#fff;--m2:#F4A261">
+              <svg><use href="#mark-bowl"/></svg>
+            </div>
+          </div>
+          <div class="stage">
+            <span class="lbl">App icon · saffron</span>
+            <div class="appicon" style="width:104px;height:104px;background:linear-gradient(150deg,#F4A261,#E76F51);--m1:#fff;--m2:#2D6A4F">
+              <svg><use href="#mark-bowl"/></svg>
+            </div>
+          </div>
+          <div class="stage" style="--m1:#2D6A4F;--m2:#F4A261">
+            <span class="lbl">48 · 32 · 24 px</span>
+            <div class="small-row">
+              <svg class="mark"><use href="#mark-bowl"/></svg>
+              <svg class="mark s32"><use href="#mark-bowl"/></svg>
+              <svg class="mark s24"><use href="#mark-bowl"/></svg>
+            </div>
+            <span class="micro-note">One stroke — crisp to 16px</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Concept 2 -->
+    <div class="concept">
+      <div class="concept-head">
+        <span class="tag">Concept 02</span>
+        <h3>In Motion</h3>
+      </div>
+      <p class="concept-desc">A figure mid-stride, built from confident strokes. Pure athletic energy — momentum, training, daily movement. The saffron arms drive the motion forward.</p>
+      <div class="logo-grid">
+        <div class="stage lockup-stage" style="--m1:#2D6A4F;--m2:#F4A261">
+          <span class="lbl">Full colour · light</span>
+          <div class="lockup">
+            <svg class="mark"><use href="#mark-mtn"/></svg>
+            <div class="wordmark"><div class="wm"><span class="b">DhalBhat</span> <span class="s">Fit</span></div><div class="sub">दालभात फिट</div></div>
+          </div>
+        </div>
+        <div class="stage dark" style="--m1:#74C69D;--m2:#F4A261">
+          <span class="lbl">On dark</span>
+          <svg class="mark" style="width:74px;height:74px"><use href="#mark-mtn"/></svg>
+        </div>
+        <div class="stage" style="--m1:#2D6A4F;--m2:#2D6A4F">
+          <span class="lbl">Single colour</span>
+          <svg class="mark" style="width:74px;height:74px"><use href="#mark-mtn"/></svg>
+        </div>
+        <div class="row2">
+          <div class="stage">
+            <span class="lbl">App icon · 1024</span>
+            <div class="appicon" style="width:104px;height:104px;background:var(--green);--m1:#fff;--m2:#F4A261">
+              <svg><use href="#mark-mtn"/></svg>
+            </div>
+          </div>
+          <div class="stage">
+            <span class="lbl">App icon · cream</span>
+            <div class="appicon" style="width:104px;height:104px;background:#F8F9FA;box-shadow:0 10px 30px rgba(26,26,46,.14);--m1:#2D6A4F;--m2:#E76F51">
+              <svg><use href="#mark-mtn"/></svg>
+            </div>
+          </div>
+          <div class="stage" style="--m1:#2D6A4F;--m2:#F4A261">
+            <span class="lbl">48 · 32 · 24 px</span>
+            <div class="small-row">
+              <svg class="mark"><use href="#mark-mtn"/></svg>
+              <svg class="mark s32"><use href="#mark-mtn"/></svg>
+              <svg class="mark s24"><use href="#mark-mtn"/></svg>
+            </div>
+            <span class="micro-note">Figure stays clear when tiny</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Concept 3 -->
+    <div class="concept">
+      <div class="concept-head">
+        <span class="tag">Concept 03</span>
+        <h3>Strength D</h3>
+      </div>
+      <p class="concept-desc">A bold <b>D</b> monogram cradling a dumbbell in its counter. An athletic lettermark that works alone on kit and merch; <em>"halBhat Fit"</em> follows in Poppins.</p>
+      <div class="logo-grid">
+        <div class="stage lockup-stage" style="--m1:#2D6A4F;--m2:#F4A261">
+          <span class="lbl">Full colour · light</span>
+          <div class="lockup">
+            <svg class="mark"><use href="#mark-d"/></svg>
+            <div class="wordmark"><div class="wm"><span class="b">D</span>halBhat <span class="s">Fit</span></div><div class="sub">दालभात फिट</div></div>
+          </div>
+        </div>
+        <div class="stage dark" style="--m1:#74C69D;--m2:#F4A261">
+          <span class="lbl">On dark</span>
+          <svg class="mark" style="width:74px;height:74px"><use href="#mark-d"/></svg>
+        </div>
+        <div class="stage" style="--m1:#2D6A4F;--m2:#2D6A4F">
+          <span class="lbl">Single colour</span>
+          <svg class="mark" style="width:74px;height:74px"><use href="#mark-d"/></svg>
+        </div>
+        <div class="row2">
+          <div class="stage">
+            <span class="lbl">App icon · 1024</span>
+            <div class="appicon" style="width:104px;height:104px;background:var(--green);--m1:#fff;--m2:#F4A261">
+              <svg><use href="#mark-d"/></svg>
+            </div>
+          </div>
+          <div class="stage">
+            <span class="lbl">App icon · saffron</span>
+            <div class="appicon" style="width:104px;height:104px;background:linear-gradient(150deg,#F4A261,#E76F51);--m1:#fff;--m2:#2D6A4F">
+              <svg><use href="#mark-d"/></svg>
+            </div>
+          </div>
+          <div class="stage" style="--m1:#2D6A4F;--m2:#F4A261">
+            <span class="lbl">48 · 32 · 24 px</span>
+            <div class="small-row">
+              <svg class="mark"><use href="#mark-d"/></svg>
+              <svg class="mark s32"><use href="#mark-d"/></svg>
+              <svg class="mark s24"><use href="#mark-d"/></svg>
+            </div>
+            <span class="micro-note">Dumbbell reads at a glance</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 2 · RECOMMENDED ===================== -->
+<section id="recommended">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num"><b>02</b> · Recommendation</div>
+      <h2>Lead with Concept 01</h2>
+    </div>
+    <div class="reco">
+      <div class="reco-mark" style="--m1:#fff;--m2:#F4A261">
+        <svg><use href="#mark-bowl"/></svg>
+      </div>
+      <div>
+        <h3>Recommended mark</h3>
+        <h4>Pulse Peak — the heartbeat summit</h4>
+        <p>It says <b>fitness</b> at a glance — a heartbeat every gym-goer recognises — while the tall central spike doubles as a Himalayan peak, keeping the design unmistakably Nepali. It collapses to a single continuous stroke, so it stays sharp on a watch face, a tab bar, or an embroidered cap.</p>
+        <ul>
+          <li>Fitness-first — the pulse reads instantly as health, energy, and training.</li>
+          <li>Subtly Nepali — the summit spike + saffron marker nod to the mountains, no literal illustration.</li>
+          <li>Ultra-scalable — one stroke survives down to 16px and one-colour print. Concept&nbsp;02 (In Motion) is the energetic backup for marketing.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 3 · COLOR ===================== -->
+<section id="colors">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num"><b>03</b> · Colour</div>
+      <h2>Palette &amp; use cases</h2>
+      <p>Six core colours with hex, where each is used, and its dark-mode variant.</p>
+    </div>
+    <div class="color-grid">
+
+      <div class="swatch">
+        <div class="chip" style="background:#2D6A4F"><span class="role">Primary</span><span class="hex">#2D6A4F</span></div>
+        <div class="body">
+          <p class="name">Deep Forest Green</p>
+          <p class="use">Brand colour, headers, nav, key surfaces. Nepal's mountains &amp; nature.</p>
+          <div class="dark-row"><span class="dark-dot" style="background:#40916C"></span><span>Dark mode → <b>#40916C</b></span></div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="chip" style="background:#F4A261"><span class="role">Accent · CTA</span><span class="hex">#F4A261</span></div>
+        <div class="body">
+          <p class="name">Warm Saffron</p>
+          <p class="use">Primary buttons, highlights, active states. Spice, food, cultural warmth.</p>
+          <div class="dark-row"><span class="dark-dot" style="background:#F6B179"></span><span>Dark mode → <b>#F6B179</b></span></div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="chip" style="background:#F8F9FA;border-bottom:1px solid var(--line)"><span class="role">Background</span><span class="hex" style="color:#1A1A2E;background:rgba(0,0,0,.06)">#F8F9FA</span></div>
+        <div class="body">
+          <p class="name">Off-white</p>
+          <p class="use">App surface &amp; cards. Clean and readable, never harsh pure-white.</p>
+          <div class="dark-row"><span class="dark-dot" style="background:#121A17"></span><span>Dark mode → <b>#121A17</b></span></div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="chip" style="background:#1A1A2E"><span class="role">Text</span><span class="hex">#1A1A2E</span></div>
+        <div class="body">
+          <p class="name">Near-black</p>
+          <p class="use">Headlines &amp; body. Modern, high-contrast on off-white.</p>
+          <div class="dark-row"><span class="dark-dot" style="background:#E9ECEF"></span><span>Dark mode text → <b>#E9ECEF</b></span></div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="chip" style="background:#52B788"><span class="role">Success</span><span class="hex">#52B788</span></div>
+        <div class="body">
+          <p class="name">Bright Green</p>
+          <p class="use">Progress, calorie ring under target, achievements &amp; streaks.</p>
+          <div class="dark-row"><span class="dark-dot" style="background:#74C69D"></span><span>Dark mode → <b>#74C69D</b></span></div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="chip" style="background:#E76F51"><span class="role">Error · Alert</span><span class="hex">#E76F51</span></div>
+        <div class="body">
+          <p class="name">Soft Red</p>
+          <p class="use">Over-calorie warnings, gentle alerts. Warm, never alarming.</p>
+          <div class="dark-row"><span class="dark-dot" style="background:#F08A6E"></span><span>Dark mode → <b>#F08A6E</b></span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 4 · TYPE ===================== -->
+<section id="type">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num"><b>04</b> · Typography</div>
+      <h2>Poppins × Noto Sans Devanagari</h2>
+      <p>One geometric sans for English, one matched Devanagari face for Nepali. They share rounded, humanist proportions and pair cleanly.</p>
+    </div>
+
+    <div class="type-card">
+      <div class="meta"><h3>Poppins</h3><span class="src">English · Latin — Google Fonts</span></div>
+      <div class="specimen-row"><span class="w">Display · 600</span><span style="font-size:46px;font-weight:600;letter-spacing:-.02em">Eat well, move daily</span></div>
+      <div class="specimen-row"><span class="w">Heading · 600</span><span style="font-size:30px;font-weight:600;letter-spacing:-.01em">1,240 of 1,800 kcal</span></div>
+      <div class="specimen-row"><span class="w">Subhead · 500</span><span style="font-size:20px;font-weight:500">Home Full Body · 30 min</span></div>
+      <div class="specimen-row"><span class="w">Body · 400</span><span style="font-size:16px;font-weight:400">Track real Nepali portions and get workouts that fit your goal and your day.</span></div>
+      <div class="specimen-row"><span class="w">Caption · 500</span><span style="font-size:12.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">AI estimated · medium plate</span></div>
+    </div>
+
+    <div class="type-card">
+      <div class="meta"><h3 class="dev">नोटो सान्स देवनागरी</h3><span class="src">Nepali · Devanagari — Google Fonts</span></div>
+      <div class="specimen-row"><span class="w">Display · 600</span><span class="dev" style="font-size:44px;font-weight:600">स्वस्थ खानपान</span></div>
+      <div class="specimen-row"><span class="w">Heading · 600</span><span class="dev" style="font-size:29px;font-weight:600">मध्यम दाल भात</span></div>
+      <div class="specimen-row"><span class="w">Body · 400</span><span class="dev" style="font-size:17px;font-weight:400">तपाईंको लक्ष्य अनुसार खाना र व्यायाम ट्र्याक गर्नुहोस्।</span></div>
+      <div class="specimen-row"><span class="w">Labels · 500</span><span class="dev" style="font-size:16px;font-weight:500">मोमो · चिया · सेलरोटी · अचार · चटपटे</span></div>
+    </div>
+
+    <div class="type-card">
+      <div class="meta"><h3>Bilingual lockups</h3><span class="src">How the two faces sit together in the UI</span></div>
+      <div class="pair-line">Dal Bhat <span class="dev">दाल भात</span> · 700 kcal</div>
+      <div class="pair-line" style="margin-top:14px">Good morning <span class="dev">शुभ प्रभात</span> 🌄</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 5 · STORE ICONS ===================== -->
+<section id="store" style="border-bottom:none">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num"><b>05</b> · App icons</div>
+      <h2>Store-ready icons</h2>
+      <p>Recommended Concept 01 mark, exported at store dimensions.</p>
+    </div>
+    <div class="store-grid">
+      <div class="store-item">
+        <div class="appicon store-1024" style="--m1:#fff;--m2:#F4A261"><svg><use href="#mark-bowl"/></svg></div>
+        <div class="cap"><b>1024 × 1024</b>App Store · rounded</div>
+      </div>
+      <div class="store-item">
+        <div class="appicon store-512" style="--m1:#fff;--m2:#F4A261"><svg><use href="#mark-bowl"/></svg></div>
+        <div class="cap"><b>512 × 512</b>Play Store</div>
+      </div>
+      <div class="store-item">
+        <div class="appicon store-512" style="background:linear-gradient(150deg,#F4A261,#E76F51)!important;--m1:#fff;--m2:#2D6A4F"><svg><use href="#mark-bowl"/></svg></div>
+        <div class="cap"><b>Alt · saffron</b>Marketing</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <b>DhalBhat Fit</b> — Brand Foundation v1 · Next up: 8 hi-fi screens (iPhone + Android) and the component sheet.
+  </div>
+</footer>
+
+</body>
+</html>

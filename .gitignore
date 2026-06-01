@@ -1,0 +1,29 @@
+# Credentials — NEVER commit
+app/.env.local
+app/.env
+*.env
+
+# Flutter build outputs
+app/build/
+app/.dart_tool/
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+
+# Android
+app/android/.gradle/
+app/android/local.properties
+app/android/key.properties
+*.jks
+*.keystore
+
+# iOS
+app/ios/Pods/
+app/ios/.symlinks/
+
+# macOS
+app/macos/Pods/
+
+# General
+.DS_Store
+Thumbs.db
+*.log

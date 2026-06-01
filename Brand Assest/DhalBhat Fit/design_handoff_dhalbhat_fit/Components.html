@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DhalBhat Fit — Components</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+<style>
+  .doc{max-width:1080px;margin:0 auto;padding:0 40px 80px;}
+  .doc-head{padding:48px 0 8px;}
+  .doc-head .kick{display:inline-flex;align-items:center;gap:9px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--green);background:#fff;border:1px solid var(--line);padding:7px 14px;border-radius:999px;}
+  .doc-head h1{font-size:38px;font-weight:700;letter-spacing:-.025em;margin:18px 0 6px;}
+  .doc-head p{font-size:16px;color:var(--ink-2);margin:0;max-width:620px;}
+  .group{margin-top:46px;}
+  .group > h2{font-size:14px;font-weight:600;letter-spacing:.04em;color:var(--ink-2);text-transform:uppercase;margin:0 0 16px;padding-bottom:10px;border-bottom:1px solid var(--line-2);}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:var(--r-card);box-shadow:var(--sh-1);padding:28px;}
+  .specrow{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+  .specrow + .specrow{margin-top:22px;padding-top:22px;border-top:1px dashed var(--line);}
+  .speclabel{width:140px;flex:0 0 auto;font-size:12.5px;color:var(--ink-3);font-weight:500;}
+  .speclabel b{display:block;color:var(--ink);font-size:13.5px;font-weight:600;margin-bottom:2px;}
+  .demos{display:flex;align-items:center;gap:14px;flex-wrap:wrap;flex:1;}
+  /* inputs */
+  .field{display:flex;flex-direction:column;gap:7px;width:280px;}
+  .field label{font-size:12.5px;font-weight:600;color:var(--ink-2);}
+  .input{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--line-2);border-radius:14px;padding:13px 15px;font-size:14.5px;color:var(--ink);}
+  .input.focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(45,106,79,.1);}
+  .input svg{width:18px;height:18px;color:var(--ink-3);}
+  .input input{border:none;outline:none;font-family:var(--font);font-size:14.5px;width:100%;background:transparent;color:var(--ink);}
+  .input .ph{color:var(--ink-3);}
+  .toggle{width:50px;height:30px;border-radius:999px;background:var(--green);position:relative;flex:0 0 auto;}
+  .toggle::after{content:"";position:absolute;width:24px;height:24px;border-radius:50%;background:#fff;top:3px;right:3px;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+  .toggle.off{background:var(--line-2);}
+  .toggle.off::after{right:auto;left:3px;}
+  .tokens{display:flex;gap:10px;flex-wrap:wrap;}
+  .tok{font-family:'Poppins';font-size:12px;color:var(--ink-2);background:var(--bg);border:1px solid var(--line-2);border-radius:8px;padding:6px 10px;}
+  .tok b{color:var(--ink);}
+  .navbar-demo{width:393px;border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:var(--sh-1);}
+  .navbar-demo .bottomnav{position:static;border-radius:0;}
+</style>
+</head>
+<body style="background:#EDEFF2;font-family:var(--font);color:var(--ink);-webkit-font-smoothing:antialiased;margin:0">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="pulse" viewBox="0 0 64 64">
+    <path d="M4 42 H16 L21 34 L26 42 L32 8 L38 42 L43 34 L48 42 H60" fill="none" stroke="#2D6A4F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="32" cy="8" r="4" fill="#F4A261"/>
+  </symbol>
+</defs></svg>
+
+<div class="doc">
+  <div class="doc-head">
+    <span class="kick"><svg width="14" height="14"><use href="#pulse"/></svg> DhalBhat Fit · Components</span>
+    <h1>Component library</h1>
+    <p>The building blocks for development — buttons, inputs, chips, cards, the tab bar, and core tokens. All styles live in <b>app.css</b>.</p>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="group">
+    <h2>Buttons</h2>
+    <div class="panel">
+      <div class="specrow"><div class="speclabel"><b>Primary</b>Saffron · CTA</div><div class="demos">
+        <button class="btn btn-primary">Save to Log</button>
+        <button class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Log Meal</button>
+      </div></div>
+      <div class="specrow"><div class="speclabel"><b>Secondary</b>Forest green</div><div class="demos">
+        <button class="btn btn-green">Start Workout</button>
+        <button class="btn btn-green"><svg viewBox="0 0 24 24" fill="#fff" width="16" height="16"><path d="M8 5v14l11-7z"/></svg> Begin</button>
+      </div></div>
+      <div class="specrow"><div class="speclabel"><b>Outline</b>Tertiary action</div><div class="demos">
+        <button class="btn btn-outline">Edit portion</button>
+        <button class="btn btn-outline" style="color:var(--error);border-color:#F3D6CD">Flag as wrong</button>
+      </div></div>
+      <div class="specrow"><div class="speclabel"><b>Text link</b>Low emphasis</div><div class="demos">
+        <a class="link" href="#">I already have an account</a>
+        <a class="link" href="#">Upload from Gallery</a>
+      </div></div>
+      <div class="specrow"><div class="speclabel"><b>Full width</b>Bottom-of-screen</div><div class="demos" style="max-width:320px">
+        <button class="btn btn-primary btn-block">Continue</button>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- CHIPS -->
+  <div class="group">
+    <h2>Chips &amp; tags</h2>
+    <div class="panel">
+      <div class="specrow"><div class="speclabel"><b>Selectable</b>Default / active</div><div class="demos">
+        <span class="chip">Small</span>
+        <span class="chip active">Medium</span>
+        <span class="chip">Large</span>
+      </div></div>
+      <div class="specrow"><div class="speclabel"><b>Quick-tap</b>Recent foods</div><div class="demos">
+        <span class="chip"><span class="dev">दाल भात</span> · Dal Bhat</span>
+        <span class="chip"><span class="dev">मोमो</span> · Momo</span>
+        <span class="chip"><span class="dev">चिया</span> · Chiya</span>
+      </div></div>
+      <div class="specrow"><div class="speclabel"><b>Status</b>AI / category</div><div class="demos">
+        <span class="chip ai">✨ AI estimated</span>
+        <span class="chip saffron">Spicy</span>
+        <span class="chip" style="background:var(--green-soft);border-color:transparent;color:var(--green);font-weight:600">Quads · Glutes</span>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- INPUTS -->
+  <div class="group">
+    <h2>Input fields</h2>
+    <div class="panel">
+      <div class="specrow"><div class="speclabel"><b>Text field</b>Default / focus</div><div class="demos">
+        <div class="field"><label>Full name</label><div class="input"><span class="ph">Prajnaa Sharma</span></div></div>
+        <div class="field"><label>Email</label><div class="input focus"><input value="prajnaa@email.com"></div></div>
+      </div></div>
+      <div class="specrow"><div class="speclabel"><b>Search</b>With leading icon</div><div class="demos">
+        <div class="field" style="width:360px"><label>Search food</label><div class="input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><span class="ph">Try “sel roti” or “chatpate”…</span></div></div>
+      </div></div>
+      <div class="specrow"><div class="speclabel"><b>Toggle</b>Settings switch</div><div class="demos" style="gap:26px">
+        <div style="display:flex;align-items:center;gap:12px"><div class="toggle"></div><span style="font-size:14px">Reminders on</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><div class="toggle off"></div><span style="font-size:14px;color:var(--ink-3)">Dark mode</span></div>
+      </div></div>
+      <div class="specrow"><div class="speclabel"><b>Segmented</b>Mode switch</div><div class="demos" style="max-width:320px">
+        <div class="segtabs" style="width:300px"><div class="seg active">Photo</div><div class="seg">Search</div><div class="seg">Voice</div></div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- CARDS -->
+  <div class="group">
+    <h2>Cards &amp; data</h2>
+    <div class="panel">
+      <div class="specrow"><div class="speclabel"><b>List card</b>Meals / rows</div><div class="demos" style="max-width:340px;width:100%">
+        <div class="card" style="width:320px">
+          <div class="meal"><div class="mi" style="background:var(--success-soft)">🍳</div><div class="mt"><b>Breakfast</b><span>Chiya, 2 eggs, roti</span></div><div class="mk" style="margin-right:10px">480</div><div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff"><path d="M5 12l5 5L20 7"/></svg></div></div>
+          <div class="meal"><div class="mi" style="background:var(--saffron-soft)">🍚</div><div class="mt"><b>Lunch</b><span class="dev">दाल भात · not logged</span></div><div class="add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" width="16" height="16"><path d="M12 5v14M5 12h14"/></svg></div></div>
+        </div>
+      </div></div>
+      <div class="specrow"><div class="speclabel"><b>Macro pills</b>Nutrient summary</div><div class="demos" style="max-width:340px;width:100%">
+        <div class="macro-row" style="width:320px">
+          <div class="macro"><span class="dot" style="background:#F4A261"></span><b>142g</b><span>CARBS</span></div>
+          <div class="macro"><span class="dot" style="background:#52B788"></span><b>68g</b><span>PROTEIN</span></div>
+          <div class="macro"><span class="dot" style="background:#E76F51"></span><b>38g</b><span>FAT</span></div>
+        </div>
+      </div></div>
+      <div class="specrow"><div class="speclabel"><b>Calorie ring</b>Hero metric</div><div class="demos">
+        <div style="position:relative;display:flex;align-items:center;justify-content:center">
+          <svg width="150" height="150" viewBox="0 0 220 220">
+            <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#52B788"/><stop offset="1" stop-color="#2D6A4F"/></linearGradient></defs>
+            <circle cx="110" cy="110" r="92" fill="none" stroke="#EAF1ED" stroke-width="17"/>
+            <circle cx="110" cy="110" r="92" fill="none" stroke="url(#rg)" stroke-width="17" stroke-linecap="round" stroke-dasharray="398 580" transform="rotate(-90 110 110)"/>
+          </svg>
+          <div style="position:absolute;text-align:center"><div style="font-size:26px;font-weight:700;letter-spacing:-.03em">1,240</div><div style="font-size:11px;color:var(--ink-3)">of 1,800</div></div>
+        </div>
+        <div class="tokens" style="flex-direction:column;gap:6px">
+          <div class="tok">Track <b>#EAF1ED</b></div>
+          <div class="tok">Fill <b>linear-gradient(#52B788→#2D6A4F)</b></div>
+          <div class="tok">Over target → fill <b>#E76F51</b></div>
+        </div>
+      </div></div>
+      <div class="specrow"><div class="speclabel"><b>Progress bars</b>Goal / steps</div><div class="demos" style="max-width:340px;width:100%;flex-direction:column;align-items:stretch;gap:14px">
+        <div class="pbar"><i style="width:60%"></i></div>
+        <div class="pbar green"><i style="width:78%"></i></div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="group">
+    <h2>Bottom tab bar</h2>
+    <div class="panel" style="display:flex;justify-content:center">
+      <div class="navbar-demo">
+        <div class="bottomnav">
+          <div class="navtab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-7 9 7v10a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1z"/></svg>Home</div>
+          <div class="navtab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6a1 1 0 011 1v1h2a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h2V5a1 1 0 011-1z"/><path d="M9 12h6M9 16h4"/></svg>Log</div>
+          <div class="navtab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4l-3 3 3 3M17 14l3 3-3 3M9 7l8 8"/></svg>Workout</div>
+          <div class="navtab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-8"/><path d="M16 8h4v4"/></svg>Progress</div>
+          <div class="navtab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>Profile</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOKENS -->
+  <div class="group">
+    <h2>Core tokens</h2>
+    <div class="panel">
+      <div class="specrow"><div class="speclabel"><b>Radius</b></div><div class="demos"><div class="tokens"><div class="tok">cards <b>20px</b></div><div class="tok">buttons / inputs <b>14px</b></div><div class="tok">chips <b>999px</b></div></div></div></div>
+      <div class="specrow"><div class="speclabel"><b>Shadow</b>Soft, warm-neutral</div><div class="demos"><div class="tokens"><div class="tok">sh-1 <b>cards</b></div><div class="tok">sh-green <b>green buttons</b></div><div class="tok">sh-saffron <b>CTAs</b></div></div></div></div>
+      <div class="specrow"><div class="speclabel"><b>Type</b></div><div class="demos"><div class="tokens"><div class="tok">Display / Heading <b>Poppins 600–700</b></div><div class="tok">Body <b>Poppins 400</b></div><div class="tok">Nepali <b>Noto Sans Devanagari</b></div></div></div></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+name: dalbhat_fit
+description: DhalBhat Fit — Nepal's Nepali food-first fitness app
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.5.1
+
+  # Navigation
+  go_router: ^14.0.0
+
+  # Backend
+  supabase_flutter: ^2.9.0
+
+  # Fonts
+  google_fonts: ^6.2.1
+
+  # SVG assets
+  flutter_svg: ^2.0.10+1
+
+  # Charts
+  fl_chart: ^0.67.0
+
+  # Local database (offline mode)
+  drift: ^2.20.0
+  sqlite3_flutter_libs: ^0.5.24
+  path_provider: ^2.1.4
+  path: ^1.9.0
+
+  # Camera / image
+  image_picker: ^1.1.2
+  cached_network_image: ^3.4.1
+
+  # Network detection
+  connectivity_plus: ^6.1.1
+
+  # Key-value storage
+  shared_preferences: ^2.3.3
+
+  # Notifications
+  flutter_local_notifications: ^18.0.1
+
+  # Utilities
+  intl: ^0.20.1
+  crypto: ^3.0.6
+  uuid: ^4.5.1
+
+  # Monitoring (add sentry_flutter back in Week 8 — currently blocked by Kotlin compat issue)
+  # sentry_flutter: ^8.10.0
+
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.13
+  drift_dev: ^2.20.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
