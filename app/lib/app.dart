@@ -8,12 +8,15 @@ class DhalBhatFitApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Light theme only for now. Screens use a fixed light palette, so a real
+    // dark mode needs a full palette migration (tracked as a follow-up). Force
+    // light so the OS dark setting can't half-apply and break readability.
     return MaterialApp.router(
       title: 'DhalBhat Fit',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
       routerConfig: appRouter,
     );
   }

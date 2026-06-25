@@ -404,7 +404,18 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
                       style: GoogleFonts.poppins(fontSize: 14.5)),
                   leading: const Icon(Icons.radio_button_unchecked,
                       color: AppColors.ink3),
-                  onTap: () => Navigator.pop(context),
+                  onTap: () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Thanks — we\'ll review this food.',
+                            style: GoogleFonts.poppins(fontSize: 13.5)),
+                        behavior: SnackBarBehavior.floating,
+                        margin: const EdgeInsets.all(16),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  },
                 )),
             const SizedBox(height: 8),
           ],
@@ -416,9 +427,10 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
   String _emoji(String category) {
     const map = {
       'dal_bhat': '🍛', 'rice': '🍚', 'dal': '🫘', 'curry': '🥘',
-      'meat': '🍗', 'momo': '🥟', 'snack': '🍿', 'bread': '🫓',
+      'meat': '🍗', 'momo': '🥟', 'snack': '🥐', 'bread': '🫓',
       'drink': '☕', 'dairy': '🥛', 'fruit': '🍎', 'egg': '🥚',
-      'pickle': '🌶', 'newari': '🍽', 'grilled': '🔥',
+      'pickle': '🌶️', 'newari': '🍽️', 'grilled': '🍖',
+      'sweet': '🍯', 'soup': '🍲', 'salad': '🥗', 'nuts': '🥜',
     };
     return map[category] ?? '🍽';
   }

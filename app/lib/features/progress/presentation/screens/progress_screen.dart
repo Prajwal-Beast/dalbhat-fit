@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/settings/settings_provider.dart';
+import '../../../../core/utils/units.dart';
 import '../../../../shared/widgets/app_card.dart';
 import '../../../food/presentation/providers/food_provider.dart';
 import '../../../weight/presentation/providers/weight_provider.dart';
@@ -22,6 +24,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> {
     final weightLogsAsync = ref.watch(weightLogsProvider);
     final calorieHistoryAsync = ref.watch(calorieHistoryProvider);
     final calorieTarget = ref.watch(dailyCalorieTargetProvider);
+    final useLbs = ref.watch(appSettingsProvider).useLbs;
 
     return Scaffold(
       backgroundColor: AppColors.bg,
@@ -50,7 +53,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> {
                     : null;
                 final weekStr = weekDelta == null
                     ? '—'
-                    : '${weekDelta >= 0 ? "+" : ""}${weekDelta.toStringAsFixed(1)} kg';
+                    : '${weekDelta >= 0 ? "+" : ""}${kgToDisplay(weekDelta, useLbs).toStringAsFixed(1)} ${weightUnit(useLbs)}';
                 final weekColor = weekDelta == null
                     ? AppColors.ink3
                     : weekDelta < 0
@@ -68,7 +71,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> {
                     _SummaryCard(
                         label: 'Current',
                         value: latest != null
-                            ? '${latest.weightKg.toStringAsFixed(1)} kg'
+                            ? formatWeight(latest.weightKg, useLbs)
                             : '—',
                         sub: 'body weight',
                         color: AppColors.green),
@@ -175,7 +178,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> {
                                 MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                  '${start.weightKg.toStringAsFixed(1)} kg',
+                                  formatWeight(start.weightKg, useLbs),
                                   style: GoogleFonts.poppins(
                                       fontSize: 12,
                                       color: AppColors.ink3)),
@@ -191,7 +194,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> {
                                         : AppColors.error,
                                   ),
                                   Text(
-                                    '${delta.abs().toStringAsFixed(1)} kg',
+                                    '${kgToDisplay(delta.abs(), useLbs).toStringAsFixed(1)} ${weightUnit(useLbs)}',
                                     style: GoogleFonts.poppins(
                                         fontSize: 12,
                                         color: delta <= 0
@@ -202,7 +205,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> {
                                 ],
                               ),
                               Text(
-                                  '${end.weightKg.toStringAsFixed(1)} kg',
+                                  formatWeight(end.weightKg, useLbs),
                                   style: GoogleFonts.poppins(
                                       fontSize: 12,
                                       color: AppColors.ink3)),
@@ -301,11 +304,12 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen> {
   }
 
   void _showWeightSheet(BuildContext context) {
+    final useLbs = ref.read(appSettingsProvider).useLbs;
     final logs = ref.read(weightLogsProvider).valueOrNull;
     final latest = logs?.isNotEmpty == true ? logs!.first : null;
     final ctrl = TextEditingController(
         text: latest != null
-            ? latest.weightKg.toStringAsFixed(1)
+            ? kgToDisplay(latest.weightKg, useLbs).toStringAsFixed(1)
             : '');
 
     showModalBottomSheet(
@@ -350,9 +354,9 @@ class _WeightLogSheetState extends ConsumerState<_WeightLogSheet> {
             autofocus: true,
             keyboardType:
                 const TextInputType.numberWithOptions(decimal: true),
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: '72.4',
-              suffixText: 'kg',
+              suffixText: weightUnit(ref.watch(appSettingsProvider).useLbs),
             ),
           ),
           const SizedBox(height: 16),
@@ -396,8 +400,11 @@ class _WeightLogSheetState extends ConsumerState<_WeightLogSheet> {
   }
 
   Future<void> _save() async {
-    final val = double.tryParse(widget.ctrl.text.trim());
-    if (val == null || val <= 0) return;
+    final entered = double.tryParse(widget.ctrl.text.trim());
+    if (entered == null || entered <= 0) return;
+    // Input is in the user's display unit — convert back to kg for storage.
+    final useLbs = ref.read(appSettingsProvider).useLbs;
+    final val = displayToKg(entered, useLbs);
     setState(() => _saving = true);
     final ok =
         await ref.read(weightLogNotifierProvider.notifier).logWeight(val);
@@ -421,7 +428,8 @@ class _GoalProgressCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final logsAsync = ref.watch(weightLogsProvider);
-    final profileAsync = ref.watch(userProfileProvider);
+    final goalAsync = ref.watch(activeGoalProvider);
+    final useLbs = ref.watch(appSettingsProvider).useLbs;
 
     return AppCard(
       padding: const EdgeInsets.all(18),
@@ -436,32 +444,37 @@ class _GoalProgressCard extends ConsumerWidget {
             loading: () => const SizedBox(height: 50),
             error: (err, st) => const SizedBox.shrink(),
             data: (logs) {
-              final profile = profileAsync.valueOrNull;
-              if (logs.isEmpty || profile == null) {
+              final goalRow = goalAsync.valueOrNull;
+              if (logs.isEmpty || goalRow == null) {
                 return Text('Log your weight to track goal progress.',
                     style: GoogleFonts.poppins(
                         fontSize: 13, color: AppColors.ink3));
               }
 
               final current = logs.first.weightKg;
-              final start = (profile['weight_kg'] as num?)?.toDouble() ??
-                  current;
-              final goal = profile['goal'] as String? ?? 'maintain';
-              // Target weight: lose → start - 10, gain → start + 5
-              final targetWeight = goal == 'lose'
-                  ? start - 10.0
-                  : goal == 'gain'
-                      ? start + 5.0
-                      : start;
-              final progress = goal == 'maintain'
+              final goalType = goalRow['goal_type'] as String? ?? 'maintain';
+              // start_weight_kg is captured once at onboarding and never
+              // overwritten, so progress actually moves as the user loses/gains.
+              final start =
+                  (goalRow['start_weight_kg'] as num?)?.toDouble() ?? current;
+              // Use the stored target if set, else a sensible heuristic.
+              final targetWeight =
+                  (goalRow['target_weight_kg'] as num?)?.toDouble() ??
+                      (goalType == 'lose'
+                          ? start - 5.0
+                          : goalType == 'gain'
+                              ? start + 5.0
+                              : start);
+              final progress = (goalType == 'maintain' || targetWeight == start)
                   ? 1.0
                   : ((current - start) / (targetWeight - start))
                       .clamp(0.0, 1.0);
               final toGo =
-                  (targetWeight - current).abs().toStringAsFixed(1);
-              final goalLabel = goal == 'lose'
+                  kgToDisplay((targetWeight - current).abs(), useLbs)
+                      .toStringAsFixed(1);
+              final goalLabel = goalType == 'lose'
                   ? 'lose weight'
-                  : goal == 'gain'
+                  : goalType == 'gain'
                       ? 'gain muscle'
                       : 'maintain weight';
 
@@ -471,10 +484,10 @@ class _GoalProgressCard extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('${current.toStringAsFixed(1)} kg now',
+                      Text('${formatWeight(current, useLbs)} now',
                           style: GoogleFonts.poppins(
                               fontSize: 13, color: AppColors.ink2)),
-                      Text('${targetWeight.toStringAsFixed(1)} kg target',
+                      Text('${formatWeight(targetWeight, useLbs)} target',
                           style: GoogleFonts.poppins(
                               fontSize: 13, color: AppColors.ink2)),
                     ],
@@ -492,9 +505,9 @@ class _GoalProgressCard extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    goal == 'maintain'
+                    goalType == 'maintain'
                         ? 'Maintaining weight — great work!'
-                        : '$toGo kg to $goalLabel',
+                        : '$toGo ${weightUnit(useLbs)} to $goalLabel',
                     style: GoogleFonts.poppins(
                         fontSize: 12.5, color: AppColors.ink3),
                   ),

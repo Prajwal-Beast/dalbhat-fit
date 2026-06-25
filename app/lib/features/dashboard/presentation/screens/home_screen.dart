@@ -4,8 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/settings/settings_provider.dart';
+import '../../../../core/utils/units.dart';
 import '../../../../shared/widgets/app_card.dart';
 import '../../../food/presentation/providers/food_provider.dart';
+import '../../../food/domain/entities/food_log.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import '../../../weight/presentation/providers/weight_provider.dart';
 import '../../../workouts/presentation/providers/workout_provider.dart';
@@ -110,6 +113,8 @@ class HomeScreen extends ConsumerWidget {
                           logs: summary.forMeal('breakfast'),
                           onTap: () =>
                               context.push('/log?type=breakfast'),
+                          onLongPress: () => _showMealItemsSheet(
+                              context, 'breakfast', 'Breakfast'),
                         ),
                         const Divider(height: 0, indent: 18, endIndent: 18),
                         _MealSlot(
@@ -118,6 +123,8 @@ class HomeScreen extends ConsumerWidget {
                           logs: summary.forMeal('lunch'),
                           onTap: () =>
                               context.push('/log?type=lunch'),
+                          onLongPress: () =>
+                              _showMealItemsSheet(context, 'lunch', 'Lunch'),
                         ),
                         const Divider(height: 0, indent: 18, endIndent: 18),
                         _MealSlot(
@@ -126,6 +133,8 @@ class HomeScreen extends ConsumerWidget {
                           logs: summary.forMeal('dinner'),
                           onTap: () =>
                               context.push('/log?type=dinner'),
+                          onLongPress: () =>
+                              _showMealItemsSheet(context, 'dinner', 'Dinner'),
                         ),
                         const Divider(height: 0, indent: 18, endIndent: 18),
                         _MealSlot(
@@ -134,6 +143,8 @@ class HomeScreen extends ConsumerWidget {
                           logs: summary.forMeal('snack'),
                           onTap: () =>
                               context.push('/log?type=snack'),
+                          onLongPress: () =>
+                              _showMealItemsSheet(context, 'snack', 'Snacks'),
                         ),
                       ],
                     ),
@@ -293,25 +304,28 @@ class _MacroPill extends StatelessWidget {
 class _MealSlot extends StatelessWidget {
   final String emoji;
   final String label;
-  final List<dynamic> logs;
+  final List<FoodLog> logs;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
   const _MealSlot(
       {required this.emoji,
       required this.label,
       required this.logs,
-      required this.onTap});
+      required this.onTap,
+      this.onLongPress});
 
   @override
   Widget build(BuildContext context) {
     final logged = logs.isNotEmpty;
     final totalCal =
-        logs.fold<double>(0, (s, l) => s + (l.caloriesConfirmed as double));
+        logs.fold<double>(0, (s, l) => s + l.caloriesConfirmed);
     final sub = logged
-        ? logs.map((l) => l.foodName as String? ?? 'food').join(', ')
+        ? '${logs.map((l) => l.foodName ?? 'food').join(', ')}  ·  hold to edit'
         : 'Not logged';
 
     return InkWell(
       onTap: onTap,
+      onLongPress: logged ? onLongPress : null,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 13),
         child: Row(
@@ -373,6 +387,99 @@ class _MealSlot extends StatelessWidget {
                 child: const Icon(Icons.add,
                     color: AppColors.saffron, size: 16),
               ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Bottom sheet listing the individual logs for one meal, each removable.
+void _showMealItemsSheet(
+    BuildContext context, String mealType, String label) {
+  showModalBottomSheet(
+    context: context,
+    shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+    builder: (_) => _MealItemsSheet(mealType: mealType, label: label),
+  );
+}
+
+class _MealItemsSheet extends ConsumerWidget {
+  final String mealType;
+  final String label;
+  const _MealItemsSheet({required this.mealType, required this.label});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final summary = ref.watch(dailySummaryProvider).valueOrNull;
+    final logs = summary?.forMeal(mealType) ?? const <FoodLog>[];
+
+    // Nothing left — close the sheet automatically after a delete empties it.
+    if (logs.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (Navigator.canPop(context)) Navigator.pop(context);
+      });
+      return const SizedBox(height: 1);
+    }
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 18, 12, 18),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Text(label,
+                  style: GoogleFonts.poppins(
+                      fontSize: 17, fontWeight: FontWeight.w600)),
+            ),
+            const SizedBox(height: 8),
+            ...logs.map((log) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(log.foodName ?? 'Food',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 14.5,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.ink)),
+                            Text(
+                                '${log.caloriesConfirmed.round()} kcal · ${log.portionLabel}',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 12, color: AppColors.ink3)),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline,
+                            color: AppColors.error, size: 22),
+                        tooltip: 'Remove',
+                        onPressed: () async {
+                          await ref
+                              .read(foodLogNotifierProvider.notifier)
+                              .deleteLog(log.id);
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Removed ${log.foodName ?? 'item'}',
+                                  style: GoogleFonts.poppins(fontSize: 13.5)),
+                              behavior: SnackBarBehavior.floating,
+                              margin: const EdgeInsets.all(16),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                )),
           ],
         ),
       ),
@@ -456,11 +563,15 @@ class _WorkoutCard extends ConsumerWidget {
             plan!.level![0].toUpperCase() + plan.level!.substring(1),
         ].join(' · '),
         onStart: () async {
-          if (plan != null) {
-            await ref
-                .read(workoutSessionNotifierProvider.notifier)
-                .startSession(plan);
+          // No recommended plan ready → send the user to browse, don't
+          // push into an empty session (the old "green screen" bug).
+          if (plan == null) {
+            context.push('/workouts');
+            return;
           }
+          await ref
+              .read(workoutSessionNotifierProvider.notifier)
+              .startSession(plan);
           if (context.mounted) context.push('/workouts/session');
         },
       ),
@@ -578,7 +689,8 @@ class _WaterCardState extends State<_WaterCard> {
               Text('Water',
                   style: GoogleFonts.poppins(
                       fontSize: 15, fontWeight: FontWeight.w600)),
-              Text('$_filled / 8',
+              // Each droplet represents 2 glasses → 4 droplets = 8 glasses.
+              Text('${_filled * 2} / 8 glasses',
                   style: GoogleFonts.poppins(
                       fontSize: 12, color: AppColors.ink3)),
             ],
@@ -629,6 +741,7 @@ class _WeightCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final logsAsync = ref.watch(weightLogsProvider);
+    final useLbs = ref.watch(appSettingsProvider).useLbs;
 
     return logsAsync.when(
       loading: () => AppCard(
@@ -655,7 +768,7 @@ class _WeightCard extends ConsumerWidget {
             : null;
         final deltaStr = delta == null
             ? null
-            : '${delta >= 0 ? "↑" : "↓"} ${delta.abs().toStringAsFixed(1)}';
+            : '${delta >= 0 ? "↑" : "↓"} ${kgToDisplay(delta.abs(), useLbs).toStringAsFixed(1)}';
         final deltaColor = delta == null
             ? AppColors.ink3
             : delta < 0
@@ -693,10 +806,11 @@ class _WeightCard extends ConsumerWidget {
                     children: [
                       TextSpan(
                           text: latest != null
-                              ? latest.weightKg.toStringAsFixed(1)
+                              ? kgToDisplay(latest.weightKg, useLbs)
+                                  .toStringAsFixed(1)
                               : '—'),
                       TextSpan(
-                          text: ' kg',
+                          text: ' ${weightUnit(useLbs)}',
                           style: GoogleFonts.poppins(
                               fontSize: 14,
                               color: AppColors.ink3,
@@ -719,10 +833,11 @@ class _WeightCard extends ConsumerWidget {
 
   void _showWeightSheet(BuildContext context, WidgetRef ref) {
     final ctrl = TextEditingController();
+    final useLbs = ref.read(appSettingsProvider).useLbs;
     final logs = ref.read(weightLogsProvider).valueOrNull;
     final latest = logs?.isNotEmpty == true ? logs!.first : null;
     if (latest != null) {
-      ctrl.text = latest.weightKg.toStringAsFixed(1);
+      ctrl.text = kgToDisplay(latest.weightKg, useLbs).toStringAsFixed(1);
     }
 
     showModalBottomSheet(
@@ -766,9 +881,9 @@ class _WeightLogSheetState extends ConsumerState<_WeightLogSheet> {
             autofocus: true,
             keyboardType:
                 const TextInputType.numberWithOptions(decimal: true),
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: '72.4',
-              suffixText: 'kg',
+              suffixText: weightUnit(ref.watch(appSettingsProvider).useLbs),
             ),
           ),
           const SizedBox(height: 16),
@@ -811,8 +926,11 @@ class _WeightLogSheetState extends ConsumerState<_WeightLogSheet> {
   }
 
   Future<void> _save() async {
-    final val = double.tryParse(widget.ctrl.text.trim());
-    if (val == null || val <= 0) return;
+    final entered = double.tryParse(widget.ctrl.text.trim());
+    if (entered == null || entered <= 0) return;
+    // Input is in the user's display unit — convert back to kg for storage.
+    final useLbs = ref.read(appSettingsProvider).useLbs;
+    final val = displayToKg(entered, useLbs);
     setState(() => _saving = true);
     final ok = await ref
         .read(weightLogNotifierProvider.notifier)

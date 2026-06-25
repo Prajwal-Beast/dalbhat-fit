@@ -242,12 +242,17 @@ class FoodLogNotifier extends StateNotifier<LogState> {
   }
 
   Future<void> deleteLog(String logId) async {
+    // Remove locally first (always works), then best-effort remote delete,
+    // then refresh once so the row can't briefly reappear from the merge.
+    await _local.deleteLog(logId);
     try {
-      await _local.deleteLog(logId);
-      _ref.invalidate(todayLogsProvider);
-      // Best-effort remote delete
       await _remoteRepo.deleteLog(logId);
-    } catch (_) {}
+    } catch (_) {
+      // Offline — the row is gone locally; it may resurface from the server
+      // until the next successful delete. Acceptable for an MVP.
+    }
+    _ref.invalidate(todayLogsProvider);
+    _ref.invalidate(recentFoodsProvider);
   }
 
   void reset() => state = const LogState();
@@ -269,9 +274,11 @@ class FoodLogNotifier extends StateNotifier<LogState> {
         portion: portion,
         mealType: mealType,
         quantity: quantity,
+        id: localId, // share the client UUID so remote+local dedupe by id
       );
       // Mark local row as synced
       await _ref.read(appDatabaseProvider).markFoodLogSynced(localId);
+      _ref.invalidate(todayLogsProvider);
     } catch (_) {
       // Row stays unsynced — SyncService will retry on next connection
     }
@@ -285,8 +292,9 @@ class FoodLogNotifier extends StateNotifier<LogState> {
   ) async {
     try {
       await _remoteRepo.logTemplate(
-          userId: userId, template: template, mealType: mealType);
+          userId: userId, template: template, mealType: mealType, id: localId);
       await _ref.read(appDatabaseProvider).markFoodLogSynced(localId);
+      _ref.invalidate(todayLogsProvider);
     } catch (_) {}
   }
 }

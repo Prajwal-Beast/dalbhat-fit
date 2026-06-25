@@ -17,11 +17,18 @@ final userProfileProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
   return ref.watch(profileDatasourceProvider).getProfile(user.id);
 });
 
+/// The active goal row (holds the immutable start weight from onboarding).
+final activeGoalProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
+  final user = ref.watch(currentUserProvider);
+  if (user == null) return null;
+  return ref.watch(profileDatasourceProvider).getActiveGoal(user.id);
+});
+
 /// Daily calorie target from profile — falls back to 1800 while loading.
 final profileCalorieTargetProvider = Provider<int>((ref) {
   final profileAsync = ref.watch(userProfileProvider);
   return profileAsync.whenOrNull(
-        data: (p) => (p?['daily_calories'] as int?) ?? 1800,
+        data: (p) => (p?['daily_calories'] as num?)?.toInt() ?? 1800,
       ) ??
       1800;
 });

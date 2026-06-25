@@ -135,4 +135,19 @@ class ProfileDatasource {
         .maybeSingle();
     return res;
   }
+
+  /// The user's current active goal. Holds the immutable `start_weight_kg`
+  /// captured at onboarding — used to measure real progress (unlike
+  /// user_profiles.weight_kg, which is overwritten on every weigh-in).
+  Future<Map<String, dynamic>?> getActiveGoal(String userId) async {
+    final res = await _client
+        .from('goals')
+        .select()
+        .eq('user_id', userId)
+        .eq('is_active', true)
+        .order('started_at', ascending: false)
+        .limit(1)
+        .maybeSingle();
+    return res;
+  }
 }
