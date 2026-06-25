@@ -26,8 +26,12 @@ final authStateProvider = StreamProvider<AppUser?>((ref) {
   return ref.watch(authRepositoryProvider).authStateChanges;
 });
 
-/// Synchronous current user — use for guards and display, not for stream logic.
+/// Current user — reactive to the auth stream so it updates immediately on
+/// sign-in / sign-out / OAuth callback. Falls back to the synchronous value
+/// while the stream is still loading (e.g. session restore on cold start).
 final currentUserProvider = Provider<AppUser?>((ref) {
+  final streamUser = ref.watch(authStateProvider).valueOrNull;
+  if (streamUser != null) return streamUser;
   return ref.watch(authRepositoryProvider).currentUser;
 });
 

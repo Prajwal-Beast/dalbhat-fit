@@ -2,6 +2,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../database/app_database.dart';
+import '../utils/uuid_util.dart';
 
 /// Watches connectivity and flushes unsynced local rows to Supabase
 /// whenever the device goes back online.
@@ -44,7 +45,7 @@ class SyncService {
           'id': log.id,
           'user_id': log.userId,
           if (log.foodId != null) 'food_id': log.foodId,
-          if (log.portionId != null) 'portion_id': log.portionId,
+          if (isUuid(log.portionId)) 'portion_id': log.portionId,
           'quantity': log.quantity,
           'calories_estimated': log.caloriesConfirmed,
           'calories_confirmed': log.caloriesConfirmed,

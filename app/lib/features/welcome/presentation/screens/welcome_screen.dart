@@ -78,14 +78,18 @@ class WelcomeScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () => context.go('/onboarding'),
+                      // Create an account first (email + password), then
+                      // onboarding. The auth screen routes to /onboarding on
+                      // successful sign-up.
+                      onPressed: () => context.go('/auth?mode=signup'),
                       child: const Text('Get Started'),
                     ),
                   ),
                   const SizedBox(height: 16),
                   TextButton(
-                    onPressed: () =>
-                        context.go('/auth', extra: {'mode': 'signin'}),
+                    // Mode is read from the query string by the router, not
+                    // from `extra` — pass it as a query param.
+                    onPressed: () => context.go('/auth?mode=signin'),
                     child: const Text('I already have an account'),
                   ),
                 ],

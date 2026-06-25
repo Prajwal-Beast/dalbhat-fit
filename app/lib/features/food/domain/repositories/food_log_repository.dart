@@ -11,6 +11,7 @@ abstract class FoodLogRepository {
     required String mealType,
     double quantity = 1.0,
     String loggedVia = 'search',
+    String? id,
   });
 
   /// Log a full meal template as a single entry.
@@ -18,6 +19,7 @@ abstract class FoodLogRepository {
     required String userId,
     required MealTemplate template,
     required String mealType,
+    String? id,
   });
 
   /// Today's logs for a user.

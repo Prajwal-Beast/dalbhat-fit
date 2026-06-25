@@ -35,7 +35,22 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   static const _totalSteps = 8;
 
+  void _showSnack(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: GoogleFonts.poppins(fontSize: 13.5)),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+      ),
+    );
+  }
+
   Future<void> _next() async {
+    // Step 0 is the name — require a non-empty value before continuing.
+    if (_step == 0 && _data.name.trim().isEmpty) {
+      _showSnack('Please enter your name to continue.');
+      return;
+    }
     if (_step < _totalSteps - 1) {
       setState(() => _step++);
       _pageCtrl.nextPage(

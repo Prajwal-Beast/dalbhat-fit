@@ -16,6 +16,7 @@ class FoodLogRepositoryImpl implements FoodLogRepository {
     required String mealType,
     double quantity = 1.0,
     String loggedVia = 'search',
+    String? id,
   }) =>
       _ds.logFood(
         userId: userId,
@@ -24,6 +25,7 @@ class FoodLogRepositoryImpl implements FoodLogRepository {
         mealType: mealType,
         quantity: quantity,
         loggedVia: loggedVia,
+        id: id,
       );
 
   @override
@@ -31,8 +33,10 @@ class FoodLogRepositoryImpl implements FoodLogRepository {
     required String userId,
     required MealTemplate template,
     required String mealType,
+    String? id,
   }) =>
-      _ds.logTemplate(userId: userId, template: template, mealType: mealType);
+      _ds.logTemplate(
+          userId: userId, template: template, mealType: mealType, id: id);
 
   @override
   Future<List<FoodLog>> getTodayLogs(String userId) => _ds.getTodayLogs(userId);

@@ -65,13 +65,29 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         password: _passwordCtrl.text,
         name: _nameCtrl.text.trim(),
       );
-      if (success && mounted) context.go('/onboarding');
+      if (success && mounted) {
+        // If email confirmation is required, sign-up returns no active
+        // session — don't push into onboarding (profile save would fail).
+        final hasSession =
+            ref.read(supabaseClientProvider).auth.currentSession != null;
+        if (hasSession) {
+          context.go('/onboarding');
+        } else {
+          _showSnack(
+              'Account created! Check your email to confirm, then sign in.');
+          setState(() => _isSignUp = false);
+        }
+      }
     } else {
       success = await notifier.signIn(
         email: _emailCtrl.text.trim(),
         password: _passwordCtrl.text,
       );
-      if (success && mounted) context.go('/home');
+      if (success && mounted) {
+        final user = ref.read(currentUserProvider);
+        context.go(
+            (user?.hasCompletedOnboarding ?? false) ? '/home' : '/onboarding');
+      }
     }
   }
 
@@ -90,9 +106,14 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       _showSnack('Enter your email above first, then tap forgot password.');
       return;
     }
-    await ref.read(authNotifierProvider.notifier).resetPassword(email);
-    if (!mounted) return;
-    _showSnack('Reset link sent to $email');
+    try {
+      await ref.read(authNotifierProvider.notifier).resetPassword(email);
+      if (!mounted) return;
+      _showSnack('Reset link sent to $email');
+    } catch (_) {
+      if (!mounted) return;
+      _showSnack('Could not send reset email. Check your connection.');
+    }
   }
 
   void _showSnack(String message) {
@@ -155,7 +176,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                             _Field(
                               controller: _nameCtrl,
                               label: 'Full name',
-                              hint: 'Prajnaa Sharma',
+                              hint: 'Your full name',
                               icon: Icons.person_outline,
                               textCapitalization: TextCapitalization.words,
                               validator: (v) => (v == null || v.trim().isEmpty)

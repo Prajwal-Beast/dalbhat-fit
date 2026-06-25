@@ -26,7 +26,9 @@ class _MealLogScreenState extends ConsumerState<MealLogScreen>
   void initState() {
     super.initState();
     _mealType = widget.mealType;
-    _tabCtrl = TabController(length: 3, vsync: this);
+    // Land on the Search tab (index 1) — Photo/AI is not wired up yet, so
+    // defaulting there made users think logging was broken.
+    _tabCtrl = TabController(length: 3, vsync: this, initialIndex: 1);
   }
 
   @override
@@ -72,7 +74,7 @@ class _MealLogScreenState extends ConsumerState<MealLogScreen>
               unselectedLabelStyle:
                   GoogleFonts.poppins(fontSize: 13.5),
               tabs: const [
-                Tab(text: '📷  Photo'),
+                Tab(text: '📷  Photo (soon)'),
                 Tab(text: '🔍  Search'),
                 Tab(text: '🏷  Quick'),
               ],
@@ -151,6 +153,19 @@ class _PhotoTab extends StatelessWidget {
   final String mealType;
   const _PhotoTab({required this.mealType});
 
+  void _comingSoon(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Photo AI logging is coming soon. Use Search for now.',
+            style: GoogleFonts.poppins(fontSize: 13.5)),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -158,7 +173,7 @@ class _PhotoTab extends StatelessWidget {
       child: Column(
         children: [
           GestureDetector(
-            onTap: () {},
+            onTap: () => _comingSoon(context),
             child: Container(
               height: 200,
               width: double.infinity,
@@ -199,7 +214,7 @@ class _PhotoTab extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              onPressed: () {},
+              onPressed: () => _comingSoon(context),
               icon: const Icon(Icons.photo_library_outlined, size: 18),
               label: const Text('Choose from gallery'),
             ),
@@ -526,7 +541,8 @@ class _QuickTab extends ConsumerWidget {
         .read(foodLogNotifierProvider.notifier)
         .logTemplate(template: template, mealType: mealType);
 
-    if (success && context.mounted) {
+    if (!context.mounted) return;
+    if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('${template.nameEn} logged!',
@@ -540,6 +556,19 @@ class _QuickTab extends ConsumerWidget {
         ),
       );
       context.pop();
+    } else {
+      final err = ref.read(foodLogNotifierProvider).errorMessage ??
+          'Could not log meal. Please sign in and try again.';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(err, style: GoogleFonts.poppins(fontSize: 13.5)),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: AppColors.error,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12)),
+          margin: const EdgeInsets.all(16),
+        ),
+      );
     }
   }
 }

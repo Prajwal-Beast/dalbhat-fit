@@ -26,12 +26,19 @@ class WorkoutCompleteScreen extends ConsumerWidget {
           // Count consecutive days with a session
           if (sessions.isEmpty) return 1;
           int count = 1;
-          DateTime prev = sessions.first.sessionDate;
+          // Normalize to date-only so multiple sessions in one day don't reset
+          // the streak.
+          DateTime dayOf(DateTime d) => DateTime(d.year, d.month, d.day);
+          DateTime prev = dayOf(sessions.first.sessionDate);
           for (var i = 1; i < sessions.length; i++) {
-            final diff = prev.difference(sessions[i].sessionDate).inDays;
-            if (diff == 1) {
+            final day = dayOf(sessions[i].sessionDate);
+            final diff = prev.difference(day).inDays;
+            if (diff == 0) {
+              // Same day — skip duplicate, don't break the streak.
+              continue;
+            } else if (diff == 1) {
               count++;
-              prev = sessions[i].sessionDate;
+              prev = day;
             } else {
               break;
             }

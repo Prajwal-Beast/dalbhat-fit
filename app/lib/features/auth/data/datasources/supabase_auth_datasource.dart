@@ -40,8 +40,10 @@ class SupabaseAuthDatasource {
       throw AppAuthException(_friendlyMessage(e.message), code: e.statusCode.toString());
     } on AppAuthException {
       rethrow;
-    } catch (_) {
-      throw const AppAuthException('Something went wrong. Check your connection.');
+    } catch (e) {
+      // Some auth errors arrive as a different exception type — still try to
+      // surface a useful message before falling back to the generic one.
+      throw AppAuthException(_fallbackMessage(e));
     }
   }
 
@@ -61,8 +63,8 @@ class SupabaseAuthDatasource {
       throw AppAuthException(_friendlyMessage(e.message), code: e.statusCode.toString());
     } on AppAuthException {
       rethrow;
-    } catch (_) {
-      throw const AppAuthException('Something went wrong. Check your connection.');
+    } catch (e) {
+      throw AppAuthException(_fallbackMessage(e));
     }
   }
 
@@ -73,8 +75,9 @@ class SupabaseAuthDatasource {
     try {
       await _client.auth.signInWithOAuth(
         OAuthProvider.google,
-        // Must match the redirect URL in Supabase Dashboard → Auth → URL Configuration
         redirectTo: 'com.dhalbhatfit.dalbhat_fit://login-callback/',
+        // Open in external browser — more reliable on Samsung devices
+        authScreenLaunchMode: LaunchMode.externalApplication,
       );
     } on AppAuthException {
       rethrow;
@@ -108,6 +111,27 @@ class SupabaseAuthDatasource {
     );
   }
 
+  /// For exceptions that aren't AuthApiException: try to extract a useful
+  /// message from the error text, else assume a connectivity problem.
+  String _fallbackMessage(Object e) {
+    final text = e.toString().toLowerCase();
+    if (text.contains('email') &&
+        (text.contains('invalid') || text.contains('valid'))) {
+      return 'Please enter a valid email address.';
+    }
+    if (text.contains('already') && text.contains('regist')) {
+      return 'An account with this email already exists. Sign in instead.';
+    }
+    if (text.contains('socket') ||
+        text.contains('network') ||
+        text.contains('connection') ||
+        text.contains('failed host lookup') ||
+        text.contains('timeout')) {
+      return 'Something went wrong. Check your connection.';
+    }
+    return 'Something went wrong. Please try again.';
+  }
+
   String _friendlyMessage(String raw) {
     final lower = raw.toLowerCase();
     if (lower.contains('invalid login') || lower.contains('invalid credentials')) {
@@ -118,6 +142,10 @@ class SupabaseAuthDatasource {
     }
     if (lower.contains('email not confirmed')) {
       return 'Please confirm your email address before signing in.';
+    }
+    if (lower.contains('email') &&
+        (lower.contains('invalid') || lower.contains('valid'))) {
+      return 'Please enter a valid email address.';
     }
     if (lower.contains('rate limit')) {
       return 'Too many attempts. Wait a moment and try again.';

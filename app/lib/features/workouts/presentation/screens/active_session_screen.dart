@@ -154,9 +154,8 @@ class ActiveSessionScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 10),
 
-                    // Exercise emoji
-                    Text(ex.exercise.emoji,
-                        style: const TextStyle(fontSize: 80)),
+                    // Exercise icon
+                    _ExerciseIcon(exercise: ex.exercise),
                     const SizedBox(height: 18),
 
                     Text(
@@ -182,19 +181,26 @@ class ActiveSessionScreen extends ConsumerWidget {
                         onSkip: notifier.skipRest,
                       ),
                     ] else ...[
-                      // Set + reps
+                      // Set + reps — use Flexible to prevent overflow
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _InfoBox(
-                              label: 'Set',
-                              value:
-                                  '${sessionState.currentSet} / ${ex.sets}'),
-                          const SizedBox(width: 20),
-                          _InfoBox(label: 'Reps', value: ex.reps),
-                          const SizedBox(width: 20),
-                          _InfoBox(
-                              label: 'Rest', value: '${ex.restSeconds}s'),
+                          Flexible(
+                            child: _InfoBox(
+                                label: 'Set',
+                                value:
+                                    '${sessionState.currentSet} / ${ex.sets}'),
+                          ),
+                          const SizedBox(width: 12),
+                          Flexible(
+                              child: _InfoBox(
+                                  label: 'Reps', value: ex.reps)),
+                          const SizedBox(width: 12),
+                          Flexible(
+                            child: _InfoBox(
+                                label: 'Rest',
+                                value: '${ex.restSeconds}s'),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 36),
@@ -353,6 +359,58 @@ class ActiveSessionScreen extends ConsumerWidget {
   }
 }
 
+// ── Exercise icon (replaces emojis) ──────────────────────────────────────────
+
+class _ExerciseIcon extends StatelessWidget {
+  final dynamic exercise;
+  const _ExerciseIcon({required this.exercise});
+
+  IconData get _icon {
+    final name = (exercise.name as String).toLowerCase();
+    final cat = (exercise.category as String).toLowerCase();
+    if (name.contains('push')) return Icons.fitness_center;
+    if (name.contains('squat') || name.contains('lunge')) return Icons.accessibility_new;
+    if (name.contains('plank') || name.contains('core')) return Icons.horizontal_rule;
+    if (name.contains('burpee')) return Icons.bolt;
+    if (name.contains('mountain') || name.contains('climber')) return Icons.terrain;
+    if (name.contains('bridge') || name.contains('glute')) return Icons.airline_seat_flat;
+    if (name.contains('dip')) return Icons.arrow_downward;
+    if (name.contains('jump')) return Icons.trending_up;
+    if (name.contains('superman')) return Icons.flight;
+    if (name.contains('deadlift') || name.contains('barbell')) return Icons.fitness_center;
+    if (name.contains('bench') || name.contains('press')) return Icons.fitness_center;
+    if (name.contains('pulldown') || name.contains('pull')) return Icons.arrow_downward;
+    if (cat.contains('cardio') || cat.contains('hiit')) return Icons.bolt;
+    if (cat.contains('chest')) return Icons.fitness_center;
+    if (cat.contains('back')) return Icons.fitness_center;
+    return Icons.sports_gymnastics;
+  }
+
+  Color get _color {
+    final cat = (exercise.category as String).toLowerCase();
+    if (cat.contains('chest') || cat.contains('push')) return AppColors.saffron;
+    if (cat.contains('legs') || cat.contains('glute')) return const Color(0xFF6C63FF);
+    if (cat.contains('core')) return AppColors.success;
+    if (cat.contains('back')) return AppColors.green;
+    if (cat.contains('full') || cat.contains('hiit') || cat.contains('cardio')) return AppColors.error;
+    return AppColors.saffron;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 110,
+      height: 110,
+      decoration: BoxDecoration(
+        color: _color.withValues(alpha: 0.18),
+        shape: BoxShape.circle,
+        border: Border.all(color: _color.withValues(alpha: 0.4), width: 2),
+      ),
+      child: Icon(_icon, size: 52, color: _color),
+    );
+  }
+}
+
 // ── Rest timer ────────────────────────────────────────────────────────────────
 
 class _RestTimer extends StatelessWidget {
@@ -416,23 +474,30 @@ class _InfoBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(value,
-              style: GoogleFonts.poppins(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white)),
-          Text(label,
-              style: GoogleFonts.poppins(
-                  fontSize: 11,
-                  color: AppColors.greenOnDark,
-                  fontWeight: FontWeight.w500)),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.poppins(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Colors.white),
+          ),
+          Text(
+            label,
+            style: GoogleFonts.poppins(
+                fontSize: 11,
+                color: AppColors.greenOnDark,
+                fontWeight: FontWeight.w500),
+          ),
         ],
       ),
     );

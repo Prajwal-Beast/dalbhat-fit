@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../../core/utils/uuid_util.dart';
 import '../../domain/entities/food.dart';
 import '../../domain/entities/food_log.dart';
 import '../../domain/entities/meal_template.dart';
@@ -14,14 +15,18 @@ class SupabaseFoodLogDatasource {
     required String mealType,
     double quantity = 1.0,
     String loggedVia = 'search',
+    String? id,
   }) async {
     final calories = portion.calories * quantity;
     final factor = (portion.weightG * quantity) / 100.0;
 
-    final row = await _client.from('food_logs').insert({
+    final row = await _client.from('food_logs').upsert({
+      'id': ?id,
       'user_id': userId,
       'food_id': food.id,
-      'portion_id': portion.id,
+      // Synthesised portions (e.g. "<uuid>_default") aren't real UUIDs and the
+      // column is a uuid FK — send null rather than corrupting the insert.
+      'portion_id': isUuid(portion.id) ? portion.id : null,
       'quantity': quantity,
       'calories_estimated': calories,
       'calories_confirmed': calories,
@@ -46,8 +51,10 @@ class SupabaseFoodLogDatasource {
     required String userId,
     required MealTemplate template,
     required String mealType,
+    String? id,
   }) async {
-    final row = await _client.from('food_logs').insert({
+    final row = await _client.from('food_logs').upsert({
+      'id': ?id,
       'user_id': userId,
       'food_id': null, // template, not a single food
       'quantity': 1.0,

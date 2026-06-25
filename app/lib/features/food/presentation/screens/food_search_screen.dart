@@ -31,9 +31,10 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
 
   static const _categoryEmoji = {
     'dal_bhat': '🍛', 'rice': '🍚', 'dal': '🫘', 'curry': '🥘',
-    'meat': '🍗', 'momo': '🥟', 'snack': '🍿', 'bread': '🫓',
+    'meat': '🍗', 'momo': '🥟', 'snack': '🥐', 'bread': '🫓',
     'drink': '☕', 'dairy': '🥛', 'fruit': '🍎', 'egg': '🥚',
-    'pickle': '🌶', 'newari': '🍽', 'grilled': '🔥', 'fermented': '🫙',
+    'pickle': '🌶️', 'newari': '🍽️', 'grilled': '🍖', 'fermented': '🫙',
+    'sweet': '🍯', 'soup': '🍲', 'salad': '🥗', 'nuts': '🥜',
   };
 
   String _emoji(String category) =>
@@ -203,10 +204,11 @@ class _EmptyState extends StatelessWidget {
           ),
           if (query.isNotEmpty) ...[
             const SizedBox(height: 20),
-            OutlinedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.add, size: 18),
-              label: const Text('Add custom food'),
+            Text(
+              "Can't find it? Try a shorter or English name.",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                  fontSize: 12.5, color: AppColors.ink3),
             ),
           ],
         ],

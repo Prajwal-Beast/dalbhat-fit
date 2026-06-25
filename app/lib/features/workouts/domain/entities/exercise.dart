@@ -60,18 +60,29 @@ class Exercise {
       primaryMuscles.isEmpty ? category : primaryMuscles.take(2).join(' · ');
 
   String get emoji {
-    const map = {
-      'push': '💪', 'pull': '🦾', 'legs': '🦵', 'core': '🧘',
-      'cardio': '🏃', 'hiit': '⚡', 'flexibility': '🤸', 'back': '🦾',
-      'chest': '💪', 'shoulders': '🏋️', 'arms': '💪',
+    // Name-specific overrides first (most accurate)
+    const nameMap = {
+      'push-up': '🤸', 'push up': '🤸', 'pushup': '🤸',
+      'squat': '🦵', 'lunge': '🦵', 'jump squat': '🦵',
+      'plank': '⬛', 'mountain climber': '🏔️',
+      'burpee': '⚡', 'glute bridge': '🍑',
+      'tricep dip': '💪', 'superman': '🦸',
+      'deadlift': '🏋️', 'bench press': '🏋️',
+      'barbell': '🏋️', 'lat pulldown': '🔽',
+      'shoulder press': '💪', 'pull-up': '🔝',
+      'run': '🏃', 'cardio': '🏃',
     };
-    for (final k in map.keys) {
-      if (category.toLowerCase().contains(k)) return map[k]!;
-      for (final m in primaryMuscles) {
-        if (m.toLowerCase().contains(k)) return map[k]!;
-      }
+    final nameLower = name.toLowerCase();
+    for (final k in nameMap.keys) {
+      if (nameLower.contains(k)) return nameMap[k]!;
     }
-    return '🔥';
+    // Category fallback
+    const catMap = {
+      'chest': '💪', 'back': '🦾', 'legs': '🦵', 'core': '⬛',
+      'shoulders': '💪', 'arms': '💪', 'triceps': '💪',
+      'full_body': '⚡', 'glutes': '🍑', 'cardio': '🏃',
+    };
+    return catMap[category.toLowerCase()] ?? '🔥';
   }
 }
 

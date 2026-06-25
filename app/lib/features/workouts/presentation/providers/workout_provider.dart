@@ -80,7 +80,9 @@ class ActiveSessionState {
   });
 
   PlanExercise? get currentExercise =>
-      exercises.isEmpty ? null : exercises[currentExerciseIndex];
+      (exercises.isEmpty || currentExerciseIndex >= exercises.length)
+          ? null
+          : exercises[currentExerciseIndex];
 
   bool get isLastExercise => currentExerciseIndex == exercises.length - 1;
   bool get isLastSet => currentSet == (currentExercise?.sets ?? 1);
@@ -169,6 +171,13 @@ class WorkoutSessionNotifier extends StateNotifier<ActiveSessionState> {
   /// Mark current set as done — starts rest timer or advances exercise.
   void completeSet() {
     if (state.resting) return;
+    // Guard against double-taps while finishing/saving (prevents duplicate
+    // session saves).
+    if (state.status == SessionStatus.saving ||
+        state.status == SessionStatus.saved ||
+        state.status == SessionStatus.completed) {
+      return;
+    }
     final ex = state.currentExercise;
     if (ex == null) return;
 
@@ -223,6 +232,10 @@ class WorkoutSessionNotifier extends StateNotifier<ActiveSessionState> {
   void _startRest(int seconds) {
     _restTimer?.cancel();
     _restTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) {
+        _restTimer?.cancel();
+        return;
+      }
       final left = state.restSecondsLeft;
       if (left > 0) {
         state = state.copyWith(restSecondsLeft: left - 1);
