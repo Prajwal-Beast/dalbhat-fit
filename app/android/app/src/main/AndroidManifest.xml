@@ -1,4 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Required for all Supabase/API/font network calls. Debug builds inject
+         this automatically, RELEASE builds do NOT — removing this breaks every
+         network request in production with instant SocketExceptions. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="dalbhat_fit"
         android:name="${applicationName}"
