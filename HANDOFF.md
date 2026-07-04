@@ -373,4 +373,13 @@ upload new AAB, confirm Redirect URLs allowlist contains
 `com.dhalbhatfit.dalbhat_fit://login-callback/`, enable Leaked Password
 Protection.
 
+### 2026-07-04 (later) — Full snapshot handoff written
+Complete session snapshot (goal, evidence, git/release state, backend changes,
+device quirks + failed workarounds, QA account, expected E2E test values, resume
+steps) captured in **`handoffs/HANDOFF-2026-07-04-1150.md`** — read that file to
+resume. Key blockers at time of writing: phone disconnected (E2E steps 3–9
+pending), new 1.0.1+2 AAB awaiting Play upload. The session-handoff skill itself
+was upgraded with a completeness checklist
+(`C:\Users\TUF\.claude\skills\session-handoff\SKILL.md`).
+
 <!-- Add the next session's entry below this line -->
