@@ -75,3 +75,6 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    # Bundled fonts — google_fonts loads these from assets instead of
+    # fetching from fonts.gstatic.com at runtime (offline-first, no flash)
+    - assets/google_fonts/
