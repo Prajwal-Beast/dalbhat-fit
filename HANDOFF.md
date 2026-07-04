@@ -330,4 +330,47 @@ Working tree is now clean except this HANDOFF.md update. **Next:** `git push -u
 origin fixes/settings-units-meal-delete` and merge to `master` (then bump version
 + build AAB for the next Play upload).
 
+### 2026-07-04 — 🔴 ROOT CAUSE OF EVERYTHING: missing INTERNET permission
+Self-driven QA session (emulator + real phone via adb). Findings & fixes, all
+committed to master and pushed:
+
+1. **`4d39e1d` — Release builds NEVER had network access.** AndroidManifest.xml
+   lacked `<uses-permission android:name="android.permission.INTERNET"/>`.
+   Debug builds inject it (hot reload), release builds don't. Proven via
+   `aapt dump permissions` (no INTERNET in APK) and Supabase API logs (zero
+   requests ever received from any release build). This retroactively explains:
+   "cannot add food", empty food_logs, all "Check your connection" errors, the
+   2026-06-13 emulator failures (misblamed on slow AVD), and why the Play
+   closed-testing AAB is dead on arrival. **FIX VERIFIED LIVE**: signup from
+   the real phone created auth user `dhalbhatqa20260626@gmail.com` (confirmed,
+   session active) — the app's first successful network call in a release build.
+2. **Food data accuracy (DB migration `fix_per100g_semantics_and_seed_portions`):**
+   ~12 foods had PER-PIECE kcal stored in the per-100g column. Worst: momo —
+   8 steamed pork momos computed as 96 kcal (real ≈ 420; was ~4× under). Fixed
+   per-100g values + macros (momo 175/230/130, chapati 297, roti 300, puri 400,
+   paratha 320, samosa 260, sel roti 330, pakoda 280, chiya 42.5, lassi 110),
+   renamed foods to drop misleading "(1 piece)/(8 pcs)" suffixes, seeded real
+   piece portions (chapati/roti/puri/paratha/samosa/sel roti/momo/egg/wai wai/
+   lassi/buffalo milk/banana/apple), fixed 3 meal templates (Momo Snack 105→440).
+3. **`2082a08` — Fonts bundled** (assets/google_fonts/, OFL licenses registered,
+   `GoogleFonts.config.allowRuntimeFetching = false`). Previously every fresh
+   install downloaded Poppins from fonts.gstatic.com at runtime.
+4. **`7d12099` — version 1.0.1+2**; new AAB built (61.8MB) at
+   `app/build/app/outputs/bundle/release/app-release.aab` — **UPLOAD THIS to
+   Play Console**; the 1.0.0+1 AAB there cannot work.
+5. Supabase project was found **INACTIVE (auto-paused, free tier)** — restored.
+   ⚠️ It WILL pause again after ~7 days without traffic; plan: upgrade or keep-
+   alive ping. Also applied `set_search_path_on_set_updated_at` (advisor fix).
+6. Verified: Google OAuth provider live (302 → Google, correct callback);
+   deep-link scheme matches manifest; calorie math (Mifflin-St Jeor + Asian
+   BMI) correct; all 5 workout plans fully seeded with sane programming.
+
+**In progress / next:** on-device E2E (onboarding → food logging → workout →
+progress → settings) with QA account `dhalbhatqa20260626@gmail.com` /
+`TestPass123!` — blocked repeatedly by flaky USB on the phone; switch adb to
+WiFi (`adb tcpip 5555`) as soon as it reconnects. Then: final flaw report,
+upload new AAB, confirm Redirect URLs allowlist contains
+`com.dhalbhatfit.dalbhat_fit://login-callback/`, enable Leaked Password
+Protection.
+
 <!-- Add the next session's entry below this line -->
