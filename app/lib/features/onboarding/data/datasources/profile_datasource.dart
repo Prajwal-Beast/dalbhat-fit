@@ -73,7 +73,7 @@ class ProfileDatasource {
       'activity_level': activityLevel,
       'workout_pref': workoutPref,
       'daily_calories': dailyCalories,
-      'updated_at': DateTime.now().toIso8601String(),
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
     });
   }
 
@@ -84,7 +84,7 @@ class ProfileDatasource {
       'units': 'metric',
       'dark_mode': false,
       'notif_enabled': true,
-      'updated_at': DateTime.now().toIso8601String(),
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
     });
   }
 
@@ -99,7 +99,7 @@ class ProfileDatasource {
       'equipment_available': workoutPref == 'gym'
           ? ['dumbbells', 'barbell', 'machines', 'pull_up_bar']
           : [],
-      'updated_at': DateTime.now().toIso8601String(),
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
     });
   }
 
@@ -112,7 +112,7 @@ class ProfileDatasource {
     // Deactivate any previous active goals first
     await _client
         .from('goals')
-        .update({'is_active': false, 'ended_at': DateTime.now().toIso8601String()})
+        .update({'is_active': false, 'ended_at': DateTime.now().toUtc().toIso8601String()})
         .eq('user_id', userId)
         .eq('is_active', true);
 
@@ -121,7 +121,7 @@ class ProfileDatasource {
       'goal_type': goal,
       'start_weight_kg': startWeightKg,
       'daily_calorie_target': dailyCalories,
-      'started_at': DateTime.now().toIso8601String(),
+      'started_at': DateTime.now().toUtc().toIso8601String(),
       'is_active': true,
     });
   }

@@ -121,8 +121,10 @@ class SupabaseWorkoutDatasource {
       'user_id': userId,
       'plan_id': planId,
       'session_date': DateTime.now().toIso8601String().substring(0, 10),
-      'started_at': startedAt.toIso8601String(),
-      'completed_at': DateTime.now().toIso8601String(),
+      // timestamptz columns: convert to UTC, else local wall-clock time is
+      // stored as if it were UTC (created_at is already true UTC).
+      'started_at': startedAt.toUtc().toIso8601String(),
+      'completed_at': DateTime.now().toUtc().toIso8601String(),
       'duration_minutes': durationMinutes,
       'exercises_completed': exercisesCompleted,
       'calories_burned': caloriesBurned.toDouble(),

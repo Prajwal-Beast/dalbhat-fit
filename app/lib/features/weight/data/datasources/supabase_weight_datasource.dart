@@ -49,7 +49,7 @@ class SupabaseWeightDatasource {
     // Also update current weight on user_profiles
     await _client
         .from('user_profiles')
-        .update({'weight_kg': weightKg, 'updated_at': DateTime.now().toIso8601String()})
+        .update({'weight_kg': weightKg, 'updated_at': DateTime.now().toUtc().toIso8601String()})
         .eq('id', userId);
 
     return WeightLog.fromMap(row);

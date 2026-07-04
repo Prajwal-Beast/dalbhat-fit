@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/settings/settings_provider.dart';
@@ -233,9 +234,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
             const SizedBox(height: 12),
             Center(
-              child: Text('DhalBhat Fit v1.0.0',
-                  style: GoogleFonts.poppins(
-                      fontSize: 12, color: AppColors.ink3)),
+              child: FutureBuilder<PackageInfo>(
+                future: PackageInfo.fromPlatform(),
+                builder: (context, snap) => Text(
+                    snap.hasData
+                        ? 'DhalBhat Fit v${snap.data!.version}'
+                        : 'DhalBhat Fit',
+                    style: GoogleFonts.poppins(
+                        fontSize: 12, color: AppColors.ink3)),
+              ),
             ),
             const SizedBox(height: 24),
           ],

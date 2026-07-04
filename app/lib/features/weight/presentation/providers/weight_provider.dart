@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../profile/presentation/providers/profile_provider.dart';
 import '../../data/datasources/supabase_weight_datasource.dart';
 import '../../domain/entities/weight_log.dart';
 
@@ -65,6 +66,9 @@ class WeightLogNotifier extends StateNotifier<WeightLogState> {
       // Invalidate so home card + progress screen refresh
       _ref.invalidate(weightLogsProvider);
       _ref.invalidate(latestWeightProvider);
+      // Datasource also wrote weight_kg to user_profiles — refresh the
+      // cached profile so Settings "Current weight" is not stale.
+      _ref.invalidate(userProfileProvider);
       return true;
     } catch (e) {
       state = WeightLogState(
