@@ -382,4 +382,47 @@ pending), new 1.0.1+2 AAB awaiting Play upload. The session-handoff skill itself
 was upgraded with a completeness checklist
 (`C:\Users\TUF\.claude\skills\session-handoff\SKILL.md`).
 
+### 2026-07-04 (final) — FULL ON-DEVICE E2E PASSED · release verdict
+Completed the entire E2E suite on the real phone (adb over WiFi 192.168.18.57:5555
+survived the flaky USB). Build tested: v1.0.1+2 (INTERNET + bundled fonts).
+
+**E2E results (all verified against live Supabase):**
+- Sign-up ✓ · Sign-out ✓ (confirm dialog) · Sign-in ✓ → lands on Home with data
+  re-synced (onboarding-aware routing works)
+- Onboarding ✓ — profile saved (Pr7, 24y M, 177cm, 75.5kg, moderate, lose);
+  app target **2207 kcal** = independent Mifflin-St Jeor calc EXACTLY
+- Food logging ✓ — momo detail shows corrected **8 pcs = 420 kcal** (was 96!);
+  dashboard total 220+420=640, "1,567 left" exact; macros scale with portion
+  (91/30/22g); DB row has portion_id (old data-loss bug dead); template log
+  (Chiura+Dahi 220) matches template values; state survives force-stop
+- Delete-meal ✓ — long-press sheet → trash → totals revert, remote row deleted
+- Workout ✓ — HIIT session completed: 100%, 5/5 exercises, saved to
+  workout_sessions; rest timer + skip-rest work
+- Weight/Progress ✓ — 74.8 kg logged → trend point plots; goal bar =
+  (75.5−74.8)/(75.5−70.5) ≈ 14% with "4.3 kg to lose" (activeGoalProvider fix
+  works); weight row in weight_logs
+- Settings ✓ — lbs toggle converts instantly (166.4 lb = 75.5kg exact),
+  **persists across force-stop/relaunch**; dark mode "coming soon" label ok
+
+**Remaining minor flaws (non-blocking, next sprint):**
+1. Settings "Current weight" shows stale profile cache until app restart after
+   logging weight (invalidate profile provider in weight-save flow)
+2. Version footer hardcoded "v1.0.0" — use package_info or bump the string
+3. workout started_at/completed_at store device-local time as UTC; created_at
+   is true UTC (mixed semantics; fine same-timezone)
+4. workout_session_items unused (0 rows) — per-set detail not persisted
+5. Known deferred: weight offline-sync dead code, offline-delete tombstone,
+   search debounce, dark-mode palette migration, photo logging, workout videos,
+   Hypertrophy day-2 has only 2 exercises
+6. Google login: server config verified (302→Google, correct client+callback);
+   full round-trip needs ONE interactive tap-test by the user (and confirm
+   Redirect URLs allowlist contains com.dhalbhatfit.dalbhat_fit://login-callback/)
+
+**VERDICT: SHIP to closed testing NOW** — upload the 1.0.1+2 AAB
+(`app/build/app/outputs/bundle/release/app-release.aab`). Production-ready after:
+12 testers × 14 days, one interactive Google-login check, Leaked Password
+Protection toggle, and a decision on Supabase free-tier auto-pause (upgrade or
+keep-alive ping — otherwise the backend sleeps after ~7 idle days and the app
+appears broken).
+
 <!-- Add the next session's entry below this line -->
