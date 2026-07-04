@@ -425,4 +425,22 @@ Protection toggle, and a decision on Supabase free-tier auto-pause (upgrade or
 keep-alive ping — otherwise the backend sleeps after ~7 idle days and the app
 appears broken).
 
+### 2026-07-04 (afternoon) — next-sprint minor flaws #1–#3 fixed (commit 63ddb4a)
+Supabase checked first: ACTIVE_HEALTHY. Fixed the three quick flaws from the E2E
+report (code only — NOT in the 1.0.1+2 AAB awaiting Play upload; they ride the
+next build):
+1. **Stale weight cache** — `weight_provider.dart` now also invalidates
+   `userProfileProvider` after a successful weight log, so Settings "Current
+   weight" refreshes without an app restart.
+2. **Version footer** — added `package_info_plus ^8.1.2`; Settings footer reads
+   the real version at runtime instead of hardcoded "v1.0.0".
+3. **UTC timestamps** — every full-timestamp write to timestamptz columns now
+   `.toUtc()` first: workout `started_at`/`completed_at`, all `updated_at`
+   upserts (profile/settings/workout-prefs/sync), goal `started_at`/`ended_at`.
+   Date-only `substring(0, 10)` fields were left local on purpose (user's
+   calendar day).
+`flutter analyze` clean. Still open: flaws #4–#6 (workout_session_items unused,
+deferred list, Google-login tap test) and ALL user actions from the verdict
+(upload AAB, testers, Leaked Password Protection, free-tier decision).
+
 <!-- Add the next session's entry below this line -->
